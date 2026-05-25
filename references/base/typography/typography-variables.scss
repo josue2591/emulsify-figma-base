@@ -1,0 +1,19 @@
+@use './typography' as *;
+
+// Create CSS custom properties for typography tokens.
+:root {
+  // Font families
+  @each $name, $value in $font-families {
+    --ff-#{$name}: #{$value};
+  }
+
+  // Font weights
+  @each $name, $value in $font-weights {
+    --fw-#{$name}: #{$value};
+  }
+
+  // Letter-spacing
+  @each $name, $value in $tracking {
+    --tracking-#{$name}: #{$value};
+  }
+}

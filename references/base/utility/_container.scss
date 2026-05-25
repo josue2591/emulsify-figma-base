@@ -1,0 +1,17 @@
+@use '../breakpoints/breakpoints' as *;
+@use '../functions/space' as *;
+@use '../functions/px2rem' as *;
+
+@mixin container {
+  width: 100%;
+  padding-inline: space('xl');
+
+  @include breakpoint('lg') {
+    padding-inline: space('xxl');
+  }
+
+  @include breakpoint('xxl') {
+    max-width: px2rem(1512);
+    margin: 0 auto;
+  }
+}

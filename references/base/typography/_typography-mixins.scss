@@ -1,0 +1,59 @@
+@use 'sass:map';
+@use './typography' as *;
+
+// type-role($role) — apply a semantic role's full style block.
+//
+// Usage:
+//   @include type-role(display);   // 36px, weight 900, tight tracking
+//   @include type-role(label);     // 10px, weight 900, uppercase, widest tracking
+//   @include type-role(body);      // 14px, weight 500
+//
+@mixin type-role($role) {
+  $config: map.get($type-roles, $role);
+
+  @if $config == null {
+    @error 'type-role(#{$role}): unknown role. Available: #{map.keys($type-roles)}.';
+  }
+
+  $family-key: map.get($config, 'family');
+  @if $family-key {
+    font-family: var(--ff-#{$family-key}, #{map.get($font-families, $family-key)});
+  } @else {
+    font-family: var(--ff-sans, #{map.get($font-families, sans)});
+  }
+
+  $weight: map.get($config, 'weight');
+  @if $weight {
+    font-weight: #{$weight};
+  }
+
+  $size: map.get($config, 'size');
+  @if $size {
+    font-size: #{$size};
+  }
+
+  $lh: map.get($config, 'line-height');
+  @if $lh {
+    line-height: #{$lh};
+  }
+
+  $tracking-key: map.get($config, 'tracking');
+  @if $tracking-key {
+    letter-spacing: var(--tracking-#{$tracking-key}, #{map.get($tracking, $tracking-key)});
+  }
+
+  $transform: map.get($config, 'transform');
+  @if $transform {
+    text-transform: #{$transform};
+  }
+}
+
+// Convenience shorthands
+@mixin type-display   { @include type-role(display); }
+@mixin type-title     { @include type-role(title); }
+@mixin type-subtitle  { @include type-role(subtitle); }
+@mixin type-body      { @include type-role(body); }
+@mixin type-label     { @include type-role(label); }
+@mixin type-micro     { @include type-role(micro); }
+@mixin type-stat      { @include type-role(stat); }
+@mixin type-code      { @include type-role(code); }

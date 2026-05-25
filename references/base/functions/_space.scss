@@ -1,0 +1,16 @@
+@use 'sass:map';
+@use '../spacing/spacing' as *;
+
+// space($step) — return a CSS custom property with Sass fallback.
+//
+// Usage:
+//   padding: space(4);   → var(--space-4, 1rem)
+//   gap: space(8);       → var(--space-8, 2rem)
+//
+@function space($step) {
+  @if map.has-key($spacings, $step) {
+    @return var(--space-#{$step}, #{map.get($spacings, $step)});
+  }
+
+  @error 'space(#{$step}): not in $spacings map. Available: #{map.keys($spacings)}.';
+}

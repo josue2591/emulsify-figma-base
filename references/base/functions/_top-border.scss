@@ -1,0 +1,26 @@
+@use '../functions/space' as *;
+@use '../functions/color' as *;
+
+@mixin top-border($width: 48px, $height: 4px, $color: clr('brand-1')) {
+  position: relative;
+  padding-block: space('lg') 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: $width;
+    height: $height;
+    background-color: $color;
+    transition: width 0.3s ease-in-out;
+  }
+
+  &:hover {
+    &::before {
+      width: 100%;
+      transition: width 0.3s ease-in-out;
+    }
+  }
+}

@@ -1,0 +1,33 @@
+<section role="region" aria-labelledby="radii-heading" class="sb-region">
+  <div class="sb-header">
+    <h2 id="radii-heading" class="sb-header__title">Border Radii</h2>
+    <p class="sb-header__subtitle">Otter uses heavily rounded corners. Usage: <code>radius(name)</code> → <code>var(--radius-name)</code>.</p>
+  </div>
+
+  <div class="sb-content">
+    <table class="sb-table">
+      <thead>
+        <tr>
+          <th scope="col">Token</th>
+          <th scope="col">CSS Variable</th>
+          <th scope="col">Value</th>
+          <th scope="col">Usage</th>
+          <th scope="col">Preview</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for radius in radii %}
+        <tr role="button" class="js-copy-trigger" title="Click to copy" data-usage="{{ radius.usage }}">
+          <th>{{ radius.label }}</th>
+          <td><code>--radius-{{ radius.name }}</code></td>
+          <td><code>{{ radius.rem }}</code></td>
+          <td><code>{{ radius.description }}</code></td>
+          <td>
+            <span style="display:inline-block; width:3rem; height:3rem; background:#f8761d; border-radius:{{ radius.rem }};" aria-hidden="true"></span>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>

@@ -1,0 +1,30 @@
+@use 'sass:map';
+@use './color-palette' as *;
+
+// Generate CSS custom properties from Otter color maps.
+:root {
+  // Primary — Otter Orange scale
+  @each $step, $value in $primary-palette {
+    --primary-#{$step}: #{$value};
+  }
+
+  // Neutrals — Slate scale
+  @each $step, $value in $slate-palette {
+    --slate-#{$step}: #{$value};
+  }
+
+  // Habit palette
+  @each $name, $value in $habit-palette {
+    --habit-#{$name}: #{$value};
+  }
+
+  // Semantic
+  @each $name, $value in $semantic-colors {
+    --#{$name}: #{$value};
+  }
+
+  // Surface & text tokens
+  @each $name, $value in $surface-tokens {
+    --#{$name}: #{$value};
+  }
+}

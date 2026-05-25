@@ -1,0 +1,16 @@
+@use 'sass:map';
+@use '../radii/radii' as *;
+
+// radius($name) — return a CSS custom property with Sass fallback.
+//
+// Usage:
+//   border-radius: radius(xl);   → var(--radius-xl, 1.5rem)
+//   border-radius: radius(full); → var(--radius-full, 9999px)
+//
+@function radius($name) {
+  @if map.has-key($radii, $name) {
+    @return var(--radius-#{$name}, #{map.get($radii, $name)});
+  }
+
+  @error 'radius(#{$name}): not in $radii map. Available: #{map.keys($radii)}.';
+}

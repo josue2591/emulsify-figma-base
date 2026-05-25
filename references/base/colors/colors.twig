@@ -1,0 +1,34 @@
+<section role="region" aria-labelledby="colors-heading" class="sb-region">
+  <header class="sb-header">
+    <h2 id="colors-heading" class="sb-header__title">Colors</h2>
+    <p class="sb-header__subtitle">Otter design system color palette. Click a row to copy its usage.</p>
+  </header>
+
+  <div class="sb-content">
+    {% for palette in palettes %}
+      <h3 class="sb-table-header">{{ palette.palette_heading }}</h3>
+      <table class="sb-table">
+        <thead>
+          <tr>
+            <th scope="col">Color</th>
+            <th scope="col">CSS Variable</th>
+            <th scope="col">Value</th>
+            <th scope="col">Preview</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for color in palette.colors %}
+            <tr role="button" class="js-copy-trigger" title="Click to copy" data-usage="{{ color.usage }}">
+              <th>{{ color.label }}</th>
+              <td><code>--{{ color.name }}</code></td>
+              <td><code>{{ color.value }}</code></td>
+              <td>
+                <span class="sb-color-preview" style="background-color: {{ color.value }};" aria-hidden="true"></span>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endfor %}
+  </div>
+</section>

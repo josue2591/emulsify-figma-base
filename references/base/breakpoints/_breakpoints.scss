@@ -1,0 +1,27 @@
+@use 'sass:map';
+@use 'sass:meta';
+@use '../functions/rem-calc' as *;
+
+$sm: rem-calc(576);
+$md: rem-calc(768);
+$lg: rem-calc(992);
+$xl: rem-calc(1200);
+$xxl: rem-calc(1400);
+
+$breakpoints: (
+  'sm': (min-width: #{$sm}),
+  'md': (min-width: #{$md}),
+  'lg': (min-width: #{$lg}),
+  'xl': (min-width: #{$xl}),
+  'xxl': (min-width: #{$xxl}),
+);
+
+@mixin breakpoint($breakpoint) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media #{meta.inspect(map.get($breakpoints, $breakpoint))} {
+      @content;
+    }
+  } @else {
+    @error 'No breakpoint `#{$breakpoint}`. Available: #{map.keys($breakpoints)}';
+  }
+}

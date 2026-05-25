@@ -1,0 +1,34 @@
+@use 'sass:map';
+@use '../typography/typography' as *;
+
+@function fontsize($size) {
+  @if map.has-key($font-sizes, $size) {
+    @return var(--fs-#{$size}, map.get($font-sizes, $size));
+  } @else {
+    @error 'fontsize(#{$size}) not in $font-sizes map.';
+  }
+}
+
+@function fontfamily($family) {
+  @if map.has-key($font-families, $family) {
+    @return var(--ff-#{$family}, map.get($font-families, $family));
+  } @else {
+    @error 'fontfamily(#{$family}) not in $font-families map.';
+  }
+}
+
+@function fontweight($weight) {
+  @if map.has-key($font-weights, $weight) {
+    @return var(--fw-#{$weight}, map.get($font-weights, $weight));
+  } @else {
+    @error 'fontweight(#{$weight}) not in $font-weights map.';
+  }
+}
+
+@function lineheight($lh) {
+  @if map.has-key($line-heights, $lh) {
+    @return var(--lh-#{$lh}, map.get($line-heights, $lh));
+  } @else {
+    @error 'lineheight(#{$lh}) not in $line-heights map.';
+  }
+}

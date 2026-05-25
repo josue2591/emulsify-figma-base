@@ -1,0 +1,34 @@
+<section role="region" aria-labelledby="icons-heading" class="sb-region">
+  <header class="sb-header">
+    <h2 id="icons-heading" class="sb-header__title">Icons</h2>
+    <p class="sb-header__subtitle">List of available SVG icons and their names.</p>
+  </header>
+
+  <div class="sb-content">
+    {% if icons|length > 0 %}
+      <table class="sb-table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Preview</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for icon in icons %}
+            {% set snippet = "{{ include('otter:icon', { name: '" ~ icon ~ "' }, with_context: false) }}" %}
+            <tr role="button" class="js-copy-trigger" title="Click to copy snippet" data-usage="{{ snippet|e('html_attr') }}">
+              <td><code>{{ icon }}</code></td>
+              <td>
+                <span class="icon sb-icon-preview">
+                  {{ include('otter:icon', { name: icon }, with_context: false) }}
+                </span>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No icons found. Add SVG files to <code>assets/icons/</code>.</p>
+    {% endif %}
+  </div>
+</section>

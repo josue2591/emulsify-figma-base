@@ -1,0 +1,42 @@
+@use '../functions/color' as *;
+@use '../functions/space' as *;
+
+@mixin visually-hidden {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  overflow: hidden;
+  height: 1px;
+  width: 1px;
+  word-wrap: normal;
+}
+
+.visually-hidden,
+.sr-only {
+  @include visually-hidden;
+}
+
+@mixin focus-styles {
+  outline: space('xs') dotted clr('interaction-focus') !important;
+  outline-offset: space('xs');
+}
+
+@mixin focus {
+  &:focus-visible {
+    @include focus-styles;
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+body[data-body-frozen],
+body[data-offcanvas-active='true'],
+body[data-gallery-active='true'] {
+  overflow: hidden;
+  max-height: 100vh;
+}
+
+p + br {
+  display: none;
+}

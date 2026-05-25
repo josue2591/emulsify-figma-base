@@ -1,0 +1,8 @@
+@use './spacing' as *;
+
+// Create CSS custom properties for each spacing step.
+:root {
+  @each $step, $value in $spacings {
+    --space-#{$step}: #{$value};
+  }
+}

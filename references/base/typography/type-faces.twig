@@ -1,0 +1,36 @@
+<section role="region" aria-labelledby="typefaces-heading" class="sb-region">
+  <header class="sb-header">
+    <h2 id="typefaces-heading" class="sb-header__title">Typefaces</h2>
+    <p class="sb-header__subtitle">All available font families and their CSS usage.</p>
+  </header>
+
+  <div class="sb-content">
+    {% for family in families %}
+      <h3 class="sb-table-header">{{ family.name }}</h3>
+      <table class="sb-table">
+        <thead>
+          <tr>
+            <th scope="col">Typeface</th>
+            <th scope="col">Font Stack</th>
+            <th scope="col">Weight</th>
+            <th scope="col">Style</th>
+            <th scope="col">Preview</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for style in family.styles %}
+            <tr>
+              <th scope="row">{{ family.name }}&nbsp;{{ style.name }}</th>
+              <td><code>{{ family.id }}</code></td>
+              <td><code>{{ style.weight }}</code></td>
+              <td><code>{{ style.style|capitalize }}</code></td>
+              <td>
+                <span class="tp-sample" style="font-family: {{ family.id }}; font-weight: {{ style.weight }}; font-style: {{ style.style }};">The quick brown fox jumps over the lazy dog</span>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endfor %}
+  </div>
+</section>

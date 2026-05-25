@@ -1,0 +1,52 @@
+body_sample_text: 'The quick brown fox jumps over the lazy dog.'
+items:
+  all/body:
+    weight: 500
+    size: 14px
+    font: 'Inter'
+    line_height: '1.5'
+    letter_spacing: '0em'
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include type-body;'
+  all/label:
+    weight: 900
+    size: 10px
+    font: 'Inter'
+    line_height: '1.2'
+    letter_spacing: '0.1em'
+    text_decoration: none
+    paragraph_spacing: 0
+    case: uppercase
+    usage: '@include type-label;'
+  all/micro:
+    weight: 900
+    size: 9px
+    font: 'Inter'
+    line_height: '1.2'
+    letter_spacing: '0.1em'
+    text_decoration: none
+    paragraph_spacing: 0
+    case: uppercase
+    usage: '@include type-micro;'
+  all/tagline:
+    weight: 900
+    size: 10px
+    font: 'Inter'
+    line_height: '1.2'
+    letter_spacing: '0.3em'
+    text_decoration: none
+    paragraph_spacing: 0
+    case: uppercase
+    usage: '@include type-role(tagline);'
+  all/code:
+    weight: 400
+    size: 13px
+    font: 'ui-monospace, monospace'
+    line_height: '1.5'
+    letter_spacing: '0em'
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include type-code;'

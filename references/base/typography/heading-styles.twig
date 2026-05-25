@@ -1,0 +1,45 @@
+<section role="region" aria-labelledby="heading-styles-heading" class="sb-region">
+  <header class="sb-header">
+    <h2 id="heading-styles-heading" class="sb-header__title">Heading Styles</h2>
+    <p class="sb-header__subtitle">SASS mixins for headings with their font declarations.</p>
+  </header>
+
+  <div class="sb-content">
+    <ul class="sb-list">
+      {% for key, heading in headings %}
+        {% set key_parts = key|split('/') %}
+        {% set display_key = key_parts[0]|capitalize ~ '/' ~ (key_parts|slice(1)|join('/')|replace({'-':' '})|title) %}
+        <li class="sb-list__item">
+          <button class="js-copy-trigger" title="Click to copy" data-usage="{{ heading.usage }}">
+            <h3 class="sb-list__title">{{ display_key }}</h3>
+            <div class="sb-list__content">
+              <div class="sb-list__content-section">
+                <div class="sb-list__content-item">
+                  <p class="sb-list__content-item-label">Font</p>
+                  <p class="sb-list__content-item-value">{{ heading.font }}</p>
+                </div>
+                <div class="sb-list__content-item">
+                  <p class="sb-list__content-item-label">Weight</p>
+                  <p class="sb-list__content-item-value">{{ heading.weight }}</p>
+                </div>
+                <div class="sb-list__content-item">
+                  <p class="sb-list__content-item-label">Size</p>
+                  <p class="sb-list__content-item-value">{{ heading.size }}</p>
+                </div>
+                <div class="sb-list__content-item">
+                  <p class="sb-list__content-item-label">Line Height</p>
+                  <p class="sb-list__content-item-value">{{ heading.line_height }}</p>
+                </div>
+              </div>
+              <div class="sb-list__content-section">
+                <p class="sb-heading-preview" style="font-family: {{ heading.font }}; font-size: {{ heading.size }}; font-weight: {{ heading.weight }}; line-height: {{ heading.line_height }};">
+                  {{ heading_sample_text }}
+                </p>
+              </div>
+            </div>
+          </button>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

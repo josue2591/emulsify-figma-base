@@ -1,0 +1,8 @@
+@use './radii' as *;
+
+// Create CSS custom properties for each radius step.
+:root {
+  @each $name, $value in $radii {
+    --radius-#{$name}: #{$value};
+  }
+}

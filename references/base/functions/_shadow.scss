@@ -1,0 +1,16 @@
+@use 'sass:map';
+@use '../shadows/shadows' as *;
+
+// shadow($name) — return a CSS custom property with Sass fallback.
+//
+// Usage:
+//   box-shadow: shadow(md);      → var(--shadow-md, ...)
+//   box-shadow: shadow(primary); → var(--shadow-primary, ...)
+//
+@function shadow($name) {
+  @if map.has-key($shadows, $name) {
+    @return var(--shadow-#{$name}, #{map.get($shadows, $name)});
+  }
+
+  @error 'shadow(#{$name}): not in $shadows map. Available: #{map.keys($shadows)}.';
+}

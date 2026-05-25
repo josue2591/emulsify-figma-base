@@ -1,0 +1,33 @@
+<section role="region" aria-labelledby="spacings-heading" class="sb-region">
+  <div class="sb-header">
+    <h2 id="spacings-heading" class="sb-header__title">Spacing</h2>
+    <p class="sb-header__subtitle">8pt baseline scale. Usage: <code>space(N)</code> → <code>var(--space-N)</code>.</p>
+  </div>
+
+  <div class="sb-content">
+    <table class="sb-table">
+      <thead>
+        <tr>
+          <th scope="col">Token</th>
+          <th scope="col">CSS Variable</th>
+          <th scope="col">Value (px)</th>
+          <th scope="col">Rem</th>
+          <th scope="col">Preview</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for spacing in spacings %}
+        <tr role="button" class="js-copy-trigger" title="Click to copy" data-usage="{{ spacing.usage }}">
+          <th>{{ spacing.label }}</th>
+          <td><code>--space-{{ spacing.name }}</code></td>
+          <td><code>{{ spacing.value }}</code></td>
+          <td><code>{{ spacing.rem }}</code></td>
+          <td>
+            <span style="display:inline-block; width:{{ spacing.value }}; height:1em; background: #f8761d; border-radius:2px;" aria-hidden="true"></span>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>

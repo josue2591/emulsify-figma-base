@@ -1,0 +1,41 @@
+@use 'sass:map';
+@use '../colors/color-palette' as *;
+
+// clr($palette, $step) — return a CSS custom property with Sass fallback.
+//
+// Usage:
+//   color: clr(primary, 500);      → var(--primary-500, #f8761d)
+//   color: clr(slate, 900);        → var(--slate-900, #0f172a)
+//   color: clr(habit, emerald);    → var(--habit-emerald, #10b981)
+//   color: clr(semantic, success); → var(--success, #10b981)
+//   color: clr(surface, fg-1);     → var(--fg-1, #0f172a)
+//   color: clr(surface, bg-app);   → var(--bg-app, #f9fafb)
+//
+@function clr($palette, $step) {
+  @if $palette == 'primary' {
+    $fallback: map.get($primary-palette, $step);
+    @return var(--primary-#{$step}, #{$fallback});
+  }
+
+  @if $palette == 'slate' {
+    $fallback: map.get($slate-palette, $step);
+    @return var(--slate-#{$step}, #{$fallback});
+  }
+
+  @if $palette == 'habit' {
+    $fallback: map.get($habit-palette, $step);
+    @return var(--habit-#{$step}, #{$fallback});
+  }
+
+  @if $palette == 'semantic' {
+    $fallback: map.get($semantic-colors, $step);
+    @return var(--#{$step}, #{$fallback});
+  }
+
+  @if $palette == 'surface' {
+    $fallback: map.get($surface-tokens, $step);
+    @return var(--#{$step}, #{$fallback});
+  }
+
+  @error 'clr(): unknown palette "#{$palette}". Use primary | slate | habit | semantic | surface.';
+}

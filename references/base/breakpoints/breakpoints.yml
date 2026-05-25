@@ -1,0 +1,21 @@
+breakpoints:
+  - name: 'SM'
+    variable: '$sm'
+    value: 'all and (min-width: 576px)'
+    usage: "@include breakpoint('sm') { ... }"
+  - name: 'MD'
+    variable: '$md'
+    value: 'all and (min-width: 768px)'
+    usage: "@include breakpoint('md') { ... }"
+  - name: 'LG'
+    variable: '$lg'
+    value: 'all and (min-width: 992px)'
+    usage: "@include breakpoint('lg') { ... }"
+  - name: 'XL'
+    variable: '$xl'
+    value: 'all and (min-width: 1200px)'
+    usage: "@include breakpoint('xl') { ... }"
+  - name: 'XXL'
+    variable: '$xxl'
+    value: 'all and (min-width: 1400px)'
+    usage: "@include breakpoint('xxl') { ... }"
