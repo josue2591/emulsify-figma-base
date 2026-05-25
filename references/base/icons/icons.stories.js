@@ -1,5 +1,7 @@
 import icons from './icons.twig';
 
+// Dynamically import all SVG files in assets/icons root (non-recursive).
+// The filenames (minus .svg) are passed as the `name` prop to the Twig template.
 const req = require.context('../../../../assets/icons', false, /\.svg$/);
 const iconNames = req.keys().map((file) => file.replace('./', '').replace('.svg', ''));
 

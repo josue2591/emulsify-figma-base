@@ -5,21 +5,17 @@
 
 <div class="sb-content">
   <table class="sb-table">
-    <thead>
-      <tr>
-        <th scope="col">Breakpoint</th>
-        <th scope="col">SCSS Variable</th>
-        <th scope="col">Media Query</th>
+    <tr>
+      <th>Breakpoint</th>
+      <th>SCSS Variable</th>
+      <th>Media Query</th>
+    </tr>
+    {% for breakpoint in breakpoints %}
+      <tr role="button" class="js-copy-trigger" title="Click to copy" data-usage="{{ breakpoint.usage }}">
+        <th>{{ breakpoint.name }}</th>
+        <td><code>{{ breakpoint.variable }}</code></td>
+        <td><code>{{ breakpoint.value }}</code></td>
       </tr>
-    </thead>
-    <tbody>
-      {% for breakpoint in breakpoints %}
-        <tr role="button" class="js-copy-trigger" title="Click to copy" data-usage="{{ breakpoint.usage }}">
-          <th>{{ breakpoint.name }}</th>
-          <td><code>{{ breakpoint.variable }}</code></td>
-          <td><code>{{ breakpoint.value }}</code></td>
-        </tr>
-      {% endfor %}
-    </tbody>
+    {% endfor %}
   </table>
 </div>

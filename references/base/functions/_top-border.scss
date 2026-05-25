@@ -1,9 +1,10 @@
 @use '../functions/space' as *;
 @use '../functions/color' as *;
 
-@mixin top-border($width: 48px, $height: 4px, $color: clr('brand-1')) {
+// Border mixins
+@mixin top-border($width: 48px, $height: 4px, $color: clr(red)) {
   position: relative;
-  padding-block: space('lg') 0;
+  padding-block: space(16) 0;
 
   &::before {
     content: '';

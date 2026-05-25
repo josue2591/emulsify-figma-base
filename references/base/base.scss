@@ -1,24 +1,23 @@
 @use 'functions/color' as *;
 @use 'functions/space' as *;
-@use 'functions/radius' as *;
-@use 'functions/shadow' as *;
 
+// Reset Styles
+
+/* Box sizing rules */
 html {
   box-sizing: border-box;
 }
 
+/* Set core body defaults */
 body {
   height: 100vh;
   overflow-x: hidden;
   overflow-y: auto;
+  scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   max-width: 100vw;
   margin: 0;
-  background-color: clr(surface, bg-app);
-  font-family: var(--ff-sans, 'Inter', system-ui, sans-serif);
-  color: clr(surface, fg-2);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background-color: clr(white);
 }
 
 *,
@@ -27,6 +26,7 @@ body {
   box-sizing: border-box;
 }
 
+/* Remove default margin */
 h1,
 h2,
 h3,
@@ -39,21 +39,25 @@ dd {
   margin: 0;
 }
 
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
 ul[role='list'],
 ol[role='list'] {
   list-style: none;
 }
 
+/* Set core root defaults */
 html:focus-within {
   scroll-behavior: smooth;
 }
 
+/* Make images easier to work with */
 img,
 picture {
   max-width: 100%;
   display: block;
 }
 
+/* Inherit fonts for inputs and buttons */
 input,
 button,
 textarea,
@@ -61,6 +65,7 @@ select {
   font: inherit;
 }
 
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
 @media (prefers-reduced-motion: reduce) {
   html:focus-within {
     scroll-behavior: auto;
@@ -74,4 +79,24 @@ select {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+// Styles for environment indicator.
+#environment-indicator {
+  @media (min-width: 1024px) {
+    transform: translateY(54px);
+  }
+}
+
+// Prevent the sticky header from overlapping the Drupal admin toolbar.
+.gin--navigation-top-bar {
+  @media (min-width: 1024px) {
+    width: calc(100% - 4rem);
+    margin-left: 4rem;
+    z-index: 99999;
+  }
+}
+
+.admin-toolbar {
+  z-index: 999999;
 }

@@ -7,6 +7,7 @@
   <div class="sb-content">
     <ul class="sb-list">
       {% for key, heading in headings %}
+        {# Format the key like "desktop/h1-super-serif" -> "Desktop/H1 Super Serif" #}
         {% set key_parts = key|split('/') %}
         {% set display_key = key_parts[0]|capitalize ~ '/' ~ (key_parts|slice(1)|join('/')|replace({'-':' '})|title) %}
         <li class="sb-list__item">
@@ -32,7 +33,25 @@
                 </div>
               </div>
               <div class="sb-list__content-section">
-                <p class="sb-heading-preview" style="font-family: {{ heading.font }}; font-size: {{ heading.size }}; font-weight: {{ heading.weight }}; line-height: {{ heading.line_height }};">
+                <div class="sb-list__content-item">
+                  <p class="sb-list__content-item-label">Letter Spacing</p>
+                  <p class="sb-list__content-item-value">{{ heading.letter_spacing }}</p>
+                </div>
+                <div class="sb-list__content-item">
+                  <p class="sb-list__content-item-label">Text Decoration</p>
+                  <p class="sb-list__content-item-value">{{ heading.text_decoration }}</p>
+                </div>
+                <div class="sb-list__content-item">
+                  <p class="sb-list__content-item-label">Paragraph Spacing</p>
+                  <p class="sb-list__content-item-value">{{ heading.paragraph_spacing }}</p>
+                </div>
+                <div class="sb-list__content-item">
+                  <p class="sb-list__content-item-label">Case</p>
+                  <p class="sb-list__content-item-value">{{ heading.case }}</p>
+                </div>
+              </div>
+              <div class="sb-list__content-section">
+                <p class="sb-heading-preview" style="font-family: {{ heading.font }}; font-size: {{ heading.size }}; font-weight: {{ heading.weight }}; line-height: {{ heading.line_height }}; letter-spacing: {{ heading.letter_spacing }}; {% if heading.text_decoration is defined %}text-decoration: {{ heading.text_decoration }};{% endif %}">
                   {{ heading_sample_text }}
                 </p>
               </div>

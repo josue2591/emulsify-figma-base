@@ -1,114 +1,6 @@
-/* ── Otter Design System tokens (inlined — no SCSS compilation needed) ──────── */
-:root {
-  /* ── PRIMARY — Otter Orange ─── */
-  --primary-50:  #fff7ed;
-  --primary-100: #ffedd5;
-  --primary-200: #fed7aa;
-  --primary-300: #fdba74;
-  --primary-400: #fb923c;
-  --primary-500: #f8761d;  /* BRAND BASE */
-  --primary-600: #ea580c;
-  --primary-700: #c2410c;
-  --primary-800: #9a3412;
-  --primary-900: #7c2d12;
-  --primary-950: #431407;
-
-  /* ── NEUTRALS — Slate ─── */
-  --slate-50:  #f8fafc;
-  --slate-100: #f1f5f9;
-  --slate-200: #e2e8f0;
-  --slate-300: #cbd5e1;
-  --slate-400: #94a3b8;
-  --slate-500: #64748b;
-  --slate-600: #475569;
-  --slate-700: #334155;
-  --slate-800: #1e293b;
-  --slate-900: #0f172a;
-
-  /* ── HABIT PALETTE ─── */
-  --habit-emerald: #10b981;
-  --habit-blue:    #3b82f6;
-  --habit-amber:   #f59e0b;
-  --habit-red:     #ef4444;
-  --habit-violet:  #8b5cf6;
-  --habit-pink:    #ec4899;
-  --habit-cyan:    #06b6d4;
-  --habit-gray:    #475569;
-
-  /* ── SEMANTIC ─── */
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger:  #ef4444;
-  --accent:  #fbbf24;
-
-  /* ── SURFACES & TEXT ─── */
-  --bg-app:      #f9fafb;
-  --bg-surface:  #ffffff;
-  --bg-subtle:   #f8fafc;
-  --bg-input:    #f8fafc;
-  --border-soft: #f1f5f9;
-  --border-base: #e2e8f0;
-  --fg-1:  #0f172a;
-  --fg-2:  #1e293b;
-  --fg-3:  #64748b;
-  --fg-4:  #94a3b8;
-  --fg-5:  #cbd5e1;
-  --fg-inv: #ffffff;
-
-  /* ── SHADOWS ─── */
-  --shadow-sm:      0 1px 2px rgba(15, 23, 42, 0.05);
-  --shadow-md:      0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
-  --shadow-xl:      0 20px 25px -5px rgba(15, 23, 42, 0.06), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
-  --shadow-2xl:     0 25px 50px -12px rgba(15, 23, 42, 0.18);
-  --shadow-primary: 0 10px 20px -8px rgba(248, 118, 29, 0.4);
-
-  /* ── BORDER RADII ─── */
-  --radius-sm:   0.75rem;
-  --radius-md:   1rem;
-  --radius-lg:   1.25rem;
-  --radius-xl:   1.5rem;
-  --radius-2xl:  2rem;
-  --radius-3xl:  2.5rem;
-  --radius-full: 9999px;
-
-  /* ── SPACING (8pt Tailwind baseline) ─── */
-  --space-1:  0.25rem;
-  --space-2:  0.5rem;
-  --space-3:  0.75rem;
-  --space-4:  1rem;
-  --space-5:  1.25rem;
-  --space-6:  1.5rem;
-  --space-7:  1.75rem;
-  --space-8:  2rem;
-  --space-10: 2.5rem;
-  --space-12: 3rem;
-
-  /* ── TYPOGRAPHY ─── */
-  --ff-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --ff-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
-  --fw-regular: 400;
-  --fw-medium:  500;
-  --fw-bold:    700;
-  --fw-black:   900;
-  --tracking-tight:   -0.02em;
-  --tracking-normal:   0em;
-  --tracking-wider:    0.05em;
-  --tracking-widest:   0.1em;
-  --tracking-kilo:     0.25em;
-  --tracking-mega:     0.3em;
-
-  /* ── STORYBOOK UI ALIASES (used by .sb-* classes below) ─── */
-  --spacing-md:  var(--space-2);   /* 8px  — gap */
-  --spacing-lg:  var(--space-4);   /* 16px — padding */
-  --spacing-xl:  var(--space-8);   /* 32px — section margin */
-  --spacing-xxl: var(--space-12);  /* 48px — top padding */
-  --fs-small:    1rem;
-  --fs-caption:  0.875rem;
-}
-
 /* Global Storybook styles */
 .sb-header {
-  padding-block: var(--spacing-xxl, 3rem) var(--spacing-xl, 2rem);
+  padding-block: var(--s-48) var(--s-32);
   border-bottom: 1px solid #e6e6e6;
 }
 
@@ -118,36 +10,36 @@
 }
 
 .sb-header__subtitle {
-  font-size: var(--fs-small, 1rem);
+  font-size: var(--fs-16);
 }
 
 .sb-content {
-  padding-block: 0 var(--spacing-xxl, 3rem);
+  padding-block: 0 var(--s-48);
 }
 
 /* Shared layout styles */
 .sb-header,
 .sb-content {
-  margin-inline: var(--spacing-xl, 2rem);
+  margin-inline: var(--s-32);
 }
 
 /* Global Storybook table styles */
 .sb-table {
   width: 100%;
   border-collapse: collapse;
-  margin-block: var(--spacing-xl, 2rem);
+  margin-block: var(--s-32);
 }
 
 .sb-table-header {
-  margin-block: var(--spacing-xl, 2rem) var(--spacing-lg, 1rem);
+  margin-block: var(--s-32) var(--s-16);
 }
 
 .sb-table th,
 .sb-table td {
   text-align: left;
-  padding: var(--spacing-lg, 1rem) var(--spacing-xl, 2rem);
+  padding: var(--s-16) var(--s-32);
   border: 1px solid #e6e6e6;
-  font-size: var(--fs-caption, 0.875rem);
+  font-size: var(--fs-14);
 }
 
 .sb-table th {
@@ -161,13 +53,13 @@
 
 /* Global Storybook list styles */
 .sb-list {
-  margin: var(--spacing-xl, 2rem) 0;
+  margin: var(--s-32) 0;
   list-style: none;
   padding: 0;
 }
 
 .sb-list__title {
-  margin-block: 0 var(--spacing-xl, 2rem);
+  margin-block: 0 var(--s-32);
 }
 
 .sb-list__item:not(:last-child) {
@@ -177,20 +69,20 @@
 .sb-list__content {
   display: flex;
   flex-direction: row;
-  gap: var(--spacing-xl, 2rem);
+  gap: var(--s-32);
 }
 
 .sb-list__content-section {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md, 0.5rem);
+  gap: var(--s-8);
   min-width: 10rem;
 }
 
 .sb-list__content-item-label,
 .sb-list__content-item-value {
   margin: 0;
-  font-size: var(--fs-caption, 0.875rem);
+  font-size: var(--fs-14);
 }
 
 .sb-list__content-item-label {
@@ -216,24 +108,24 @@ td:has(.sb-color-preview) {
   display: flex;
   width: 425px;
   height: 190px;
-  padding: var(--spacing-lg, 1rem) var(--spacing-xl, 2rem);
+  padding: var(--s-16) var(--s-32);
   margin: 0;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
   overflow: hidden;
-  background: #f2f2f2;
+  background: #F2F2F2;
 }
 
 .sb-icon-preview svg {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: var(--s-24);
+  height: var(--s-24);
 }
 
 .sb-icon-preview .icon {
   display: inline-flex;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: var(--s-24);
+  height: var(--s-24);
 }
 
 .sb-icon-preview svg {
@@ -250,7 +142,7 @@ li:has(.js-copy-trigger) {
 .js-copy-trigger {
   cursor: pointer;
   transition: box-shadow 0.2s;
-  padding: 1.5rem var(--spacing-lg, 1rem) var(--spacing-xl, 2rem);
+  padding: var(--s-24) var(--s-16) var(--s-32);
   background: none;
   border: none;
   width: 100%;
@@ -273,10 +165,10 @@ li:has(.js-copy-trigger) {
   top: 20px;
   right: 20px;
   background-color: white;
-  padding: var(--spacing-lg, 1rem) var(--spacing-xl, 2rem);
+  padding: var(--s-16) var(--s-32);
   border-radius: 0.25rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  font-size: var(--fs-caption, 0.875rem);
+  font-size: var(--fs-14);
   z-index: 9999;
   transform: translateX(100%);
   transition: transform 0.3s ease;
@@ -292,10 +184,10 @@ li:has(.js-copy-trigger) {
 
 /* Style wrapper for buttons */
 .sb-main-fullscreen:has(.button) {
-  padding: var(--spacing-lg, 1rem) var(--spacing-xl, 2rem);
+  padding: var(--s-16) var(--s-32);
 }
 
 [data-component-theme='dark'] {
-  background-color: var(--slate-900, #0f172a);
-  padding: var(--spacing-xl, 2rem);
+  background-color: rgba(var(--clr-grey-100));
+  padding: var(--s-32);
 }

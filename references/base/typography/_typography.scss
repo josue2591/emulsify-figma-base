@@ -1,82 +1,73 @@
-// OTTER DESIGN SYSTEM — Typography
-// One family (Inter), role-based scale, weight + tracking as the signature moves.
+@use '../functions/rem-calc' as *;
 
-// Font families
+// Font Size
+$font-sizes: (
+  10: rem-calc(10),
+  13: rem-calc(13),
+  14: rem-calc(14),
+  16: rem-calc(16),
+  18: rem-calc(18),
+  20: rem-calc(20),
+  22: rem-calc(22),
+  24: rem-calc(24),
+  26: rem-calc(26),
+  27: rem-calc(27),
+  28: rem-calc(28),
+  30: rem-calc(30),
+  32: rem-calc(32),
+  40: rem-calc(40),
+  44: rem-calc(44),
+  52: rem-calc(52),
+  56: rem-calc(56),
+  72: rem-calc(72),
+);
+
+// Font Families
 $font-families: (
-  sans: ('Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif),
-  mono: (ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace),
+  serif: 'Editor, serif',
+  sans: 'BCJ Benton Sans, sans-serif'
 );
 
-// Font weights
+// Font Weight Map for CSS Custom Properties
 $font-weights: (
-  regular: 400,
-  medium:  500,
-  bold:    700,
-  black:   900,
+  800: 800, // Extra Bold
+  700: 700, // Bold
+  500: 500, // Medium
+  400: 400, // Normal or Regular
 );
 
-// Letter-spacing tokens
-$tracking: (
-  tight:   -0.02em,
-  normal:   0em,
-  wider:    0.05em,
-  widest:   0.1em,
-  kilo:     0.25em,  // micro ALL-CAPS labels
-  mega:     0.3em,   // tagline / watermark
+
+// Line Heights Map for CSS Custom Properties
+$line-heights: (
+  12: rem_calc(12),
+  18: rem_calc(18),
+  19: rem_calc(19),
+  21: rem_calc(21),
+  24: rem_calc(24),
+  25: rem_calc(25),
+  26: rem_calc(26),
+  27: rem_calc(27),
+  28: rem_calc(28),
+  29: rem_calc(29),
+  30: rem_calc(30),
+  31: rem_calc(31),
+  33: rem_calc(33),
+  34: rem_calc(34),
+  35: rem_calc(35),
+  36: rem_calc(36),
+  38: rem_calc(38),
+  39: rem_calc(39),
+  42: rem_calc(42),
+  46: rem_calc(46),
+  48: rem_calc(48),
+  53: rem_calc(53),
+  67: rem_calc(67),
+  81: rem_calc(81),
 );
 
-// Semantic type roles
-$type-roles: (
-  display: (
-    size:      2.25rem,  // 36px
-    weight:    900,
-    line-height: 1.05,
-    tracking:  tight,
-  ),
-  title: (
-    size:      1.5rem,   // 24px
-    weight:    900,
-    line-height: 1.15,
-    tracking:  tight,
-  ),
-  subtitle: (
-    size:      1.125rem, // 18px
-    weight:    900,
-    line-height: 1.3,
-    tracking:  tight,
-  ),
-  body: (
-    size:      0.875rem, // 14px
-    weight:    500,
-    line-height: 1.5,
-    tracking:  normal,
-  ),
-  label: (
-    size:      0.625rem, // 10px
-    weight:    900,
-    line-height: 1.2,
-    tracking:  widest,
-    transform: uppercase,
-  ),
-  micro: (
-    size:      0.5625rem, // 9px
-    weight:    900,
-    tracking:  widest,
-    transform: uppercase,
-  ),
-  tagline: (
-    size:      0.625rem,
-    weight:    900,
-    tracking:  mega,
-    transform: uppercase,
-  ),
-  stat: (
-    size:      1.5rem,   // 24px
-    weight:    900,
-    tracking:  tight,
-  ),
-  code: (
-    size:      0.8125rem, // 13px
-    family:    mono,
-  ),
+
+// Letter Spacing Map for CSS Custom Properties
+$letter-spacings: (
+  1: -1.65%,
+  5: 5%,
 );

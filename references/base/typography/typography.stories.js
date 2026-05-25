@@ -1,11 +1,16 @@
+// Twig templates
 import typeFaces from './type-faces.twig';
 import headingStyles from './heading-styles.twig';
 import bodyStyles from './body-styles.twig';
 
+// Data files
 import typeFacesData from './type-faces.yml';
 import headingStyleData from './heading-styles.yml';
 import bodyStyleData from './body-styles.yml';
 
+/**
+ * Storybook Definition.
+ */
 export default { title: 'Base/Typography' };
 
 export const TypeFaces = () =>

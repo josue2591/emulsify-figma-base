@@ -1,52 +1,235 @@
 body_sample_text: 'The quick brown fox jumps over the lazy dog.'
 items:
-  all/body:
-    weight: 500
-    size: 14px
-    font: 'Inter'
-    line_height: '1.5'
-    letter_spacing: '0em'
-    text_decoration: none
-    paragraph_spacing: 0
-    case: original
-    usage: '@include type-body;'
-  all/label:
-    weight: 900
-    size: 10px
-    font: 'Inter'
-    line_height: '1.2'
-    letter_spacing: '0.1em'
-    text_decoration: none
-    paragraph_spacing: 0
-    case: uppercase
-    usage: '@include type-label;'
-  all/micro:
-    weight: 900
-    size: 9px
-    font: 'Inter'
-    line_height: '1.2'
-    letter_spacing: '0.1em'
-    text_decoration: none
-    paragraph_spacing: 0
-    case: uppercase
-    usage: '@include type-micro;'
-  all/tagline:
-    weight: 900
-    size: 10px
-    font: 'Inter'
-    line_height: '1.2'
-    letter_spacing: '0.3em'
-    text_decoration: none
-    paragraph_spacing: 0
-    case: uppercase
-    usage: '@include type-role(tagline);'
-  all/code:
+  # Desktop Body Styles
+  desktop/deck-large:
     weight: 400
-    size: 13px
-    font: 'ui-monospace, monospace'
-    line_height: '1.5'
-    letter_spacing: '0em'
+    size: 22px
+    font: 'Benton Sans'
+    line_height: 31px
+    letter_spacing: 0
     text_decoration: none
     paragraph_spacing: 0
     case: original
-    usage: '@include type-code;'
+    usage: '@include deck-large;'
+  desktop/deck-small:
+    weight: 400
+    size: 18px
+    font: 'Benton Sans'
+    line_height: 25px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 1px
+    case: original
+    usage: '@include deck-small;'
+  desktop/body:
+    weight: 400
+    size: 20px
+    font: 'Benton Sans'
+    line_height: 31px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include body;'
+  desktop/body-bold:
+    weight: 700
+    size: 20px
+    font: 'Benton Sans'
+    line_height: 31px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include body(weight: bold);'
+  desktop/highlight-text:
+    weight: 500
+    size: 20px
+    font: 'Benton Sans'
+    line_height: 31px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include highlight-text;'
+  desktop/small-body:
+    weight: 500
+    size: 16px
+    font: 'Benton Sans'
+    line_height: 25px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include small-body;'
+  desktop/small-body-bold:
+    weight: 700
+    size: 16px
+    font: 'Benton Sans'
+    line_height: 25px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include small-body(weight: bold);'
+  desktop/button:
+    weight: 700
+    size: 14px
+    font: 'Benton Sans'
+    line_height: 19px
+    letter_spacing: 0.7px
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include button;'
+  desktop/small-text:
+    weight: 500
+    size: 13px
+    font: 'Benton Sans'
+    line_height: 21px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include small-text;'
+  desktop/small-text-bold:
+    weight: 700
+    size: 13px
+    font: 'Benton Sans'
+    line_height: 21px
+    letter_spacing: 0
+    text_decoration: none
+    usage: '@include small-text(weight: bold);'
+  desktop/small-serif:
+    weight: 700
+    size: 16px
+    font: 'Benton Sans'
+    line_height: 28px
+    letter_spacing: 0
+    text_decoration: none
+    usage: '@include small-serif;'
+  desktop/image-caption:
+    weight: 400
+    size: 10px
+    font: 'Benton Sans'
+    line_height: 18px
+    letter_spacing: 0
+    text_decoration: none
+    usage: '@include image-caption;'
+  # Mobile Body Styles
+  mobile/deck-large:
+    weight: 400
+    size: 18px
+    font: 'Benton Sans'
+    line_height: 26px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include deck-large;'
+  mobile/deck-small:
+    weight: 400
+    size: 16px
+    font: 'Benton Sans'
+    line_height: 25px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 1px
+    case: original
+    usage: '@include deck-small;'
+  mobile/body:
+    weight: 400
+    size: 18px
+    font: 'Benton Sans'
+    line_height: 29px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include body;'
+  mobile/body-bold:
+    weight: 700
+    size: 18px
+    font: 'Benton Sans'
+    line_height: 29px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include body(weight: bold);'
+  mobile/highlight-text:
+    weight: 500
+    size: 20px
+    font: 'Benton Sans'
+    line_height: 31px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include highlight-text;'
+  mobile/small-body:
+    weight: 500
+    size: 16px
+    font: 'Benton Sans'
+    line_height: 25px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include small-body;'
+  mobile/small-body-bold:
+    weight: 700
+    size: 16px
+    font: 'Benton Sans'
+    line_height: 25px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include small-body(weight: bold);'
+  mobile/button:
+    weight: 700
+    size: 14px
+    font: 'Benton Sans'
+    line_height: 19px
+    letter_spacing: 0.7px
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include button;'
+  mobile/small-text:
+    weight: 500
+    size: 13px
+    font: 'Benton Sans'
+    line_height: 21px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include small-text;'
+  mobile/small-text-bold:
+    weight: 700
+    size: 13px
+    font: 'Benton Sans'
+    line_height: 21px
+    letter_spacing: 0
+    text_decoration: none
+    case: original
+    usage: '@include small-text(weight: bold);'
+  mobile/small-serif:
+    weight: 700
+    size: 16px
+    font: 'Editor'
+    line_height: 28px
+    letter_spacing: 0
+    text_decoration: none
+    case: original
+    usage: '@include small-serif;'
+  mobile/image-caption:
+    weight: 400
+    size: 10px
+    font: 'Benton Sans'
+    line_height: 18px
+    letter_spacing: 0
+    text_decoration: none
+    case: original
+    usage: '@include image-caption;'

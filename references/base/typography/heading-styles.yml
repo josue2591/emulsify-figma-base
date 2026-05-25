@@ -1,42 +1,194 @@
 heading_sample_text: 'The quick brown fox jumps over the lazy dog.'
 headings:
-  all/display:
-    weight: 900
-    size: 36px
-    font: 'Inter'
-    line_height: '1.05'
-    letter_spacing: '-0.02em'
+  # Desktop Heading Styles
+  desktop/h1-super-serif:
+    weight: 800
+    size: 72px
+    font: Editor
+    line_height: 81px
+    letter_spacing: -1%
     text_decoration: none
     paragraph_spacing: 0
     case: original
-    usage: '@include type-display;'
-  all/title:
-    weight: 900
+    usage: '@include h1-super-serif;'
+  desktop/h1-serif:
+    weight: 800
+    size: 56px
+    font: Editor
+    line_height: 67px
+    letter_spacing: -1%
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include h1-serif;'
+  desktop/h2-serif:
+    weight: 800
+    size: 44px
+    font: Editor
+    line_height: 53px
+    letter_spacing: -1%
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include h2-serif;'
+  desktop/h3-serif:
+    weight: 800
+    size: 30px
+    font: Editor
+    line_height: 39px
+    letter_spacing: 1px
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include h3-serif;'
+  desktop/h4-serif:
+    weight: 800
     size: 24px
-    font: 'Inter'
-    line_height: '1.15'
-    letter_spacing: '-0.02em'
+    font: Editor
+    line_height: 29px
+    letter_spacing: 1px
     text_decoration: none
     paragraph_spacing: 0
     case: original
-    usage: '@include type-title;'
-  all/subtitle:
-    weight: 900
-    size: 18px
-    font: 'Inter'
-    line_height: '1.3'
-    letter_spacing: '-0.02em'
+    usage: '@include h4-serif;'
+  desktop/h2-sans:
+    weight: 700
+    size: 40px
+    font: 'Benton Sans'
+    line_height: 48px
+    letter_spacing: 0
     text_decoration: none
     paragraph_spacing: 0
     case: original
-    usage: '@include type-subtitle;'
-  all/stat:
-    weight: 900
+    usage: '@include h2-sans;'
+  desktop/h3-sans:
+    weight: 700
+    size: 32px
+    font: 'Benton Sans'
+    line_height: 42px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include h3-sans;'
+  desktop/h4-sans:
+    weight: 700
+    size: 26px
+    font: 'Benton Sans'
+    line_height: 34px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include h4-sans;'
+  desktop/h5-sans:
+    weight: 700
+    size: 22px
+    font: 'Benton Sans'
+    line_height: 26px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include h5-sans;'
+  desktop/h6-sans:
+    weight: 700
+    size: 20px
+    font: 'Benton Sans'
+    line_height: 24px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include h6-sans;'
+  # Mobile Heading Styles
+  mobile/h1-serif:
+    weight: 800
+    size: 40px
+    font: Editor
+    line_height: 46px
+    letter_spacing: -1%
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include h1-serif;'
+  mobile/h2-serif:
+    weight: 800
+    size: 32px
+    font: Editor
+    line_height: 38px
+    letter_spacing: -1%
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include h2-serif;'
+  mobile/h3-serif:
+    weight: 800
+    size: 28px
+    font: Editor
+    line_height: 34px
+    letter_spacing: 1px
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include h3-serif;'
+  mobile/h4-serif:
+    weight: 800
     size: 24px
-    font: 'Inter'
-    line_height: '1'
-    letter_spacing: '-0.02em'
+    font: Editor
+    line_height: 31px
+    letter_spacing: 1px
     text_decoration: none
     paragraph_spacing: 0
     case: original
-    usage: '@include type-stat;'
+    usage: '@include h4-serif;'
+  mobile/h2-sans:
+    weight: 700
+    size: 30px
+    font: 'Benton Sans'
+    line_height: 35px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include h2-sans;'
+  mobile/h3-sans:
+    weight: 700
+    size: 27px
+    font: 'Benton Sans'
+    line_height: 33px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include h3-sans;'
+  mobile/h4-sans:
+    weight: 700
+    size: 24px
+    font: 'Benton Sans'
+    line_height: 30px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include h4-sans;'
+  mobile/h5-sans:
+    weight: 700
+    size: 22px
+    font: 'Benton Sans'
+    line_height: 26px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include h5-sans;'
+  mobile/h6-sans:
+    weight: 700
+    size: 20px
+    font: 'Benton Sans'
+    line_height: 24px
+    letter_spacing: 0
+    text_decoration: none
+    paragraph_spacing: 0
+    case: original
+    usage: '@include h6-sans;'

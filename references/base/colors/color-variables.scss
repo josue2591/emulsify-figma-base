@@ -1,30 +1,28 @@
-@use 'sass:map';
+@use 'sass:meta';
 @use './color-palette' as *;
+@use '../functions/color' as *;
 
-// Generate CSS custom properties from Otter color maps.
+
+// Create CSS custom properties based on the color-palette map.
+// For each color variable (e.g. `text` and `background`) a css custom
+// property will be created. (e.g. `--clr-text:` and `--clr-background:`).
 :root {
-  // Primary — Otter Orange scale
-  @each $step, $value in $primary-palette {
-    --primary-#{$step}: #{$value};
-  }
-
-  // Neutrals — Slate scale
-  @each $step, $value in $slate-palette {
-    --slate-#{$step}: #{$value};
-  }
-
-  // Habit palette
-  @each $name, $value in $habit-palette {
-    --habit-#{$name}: #{$value};
-  }
-
-  // Semantic
-  @each $name, $value in $semantic-colors {
-    --#{$name}: #{$value};
-  }
-
-  // Surface & text tokens
-  @each $name, $value in $surface-tokens {
-    --#{$name}: #{$value};
+  // Create custom properties from the default theme.
+  @each $theme, $palette in $color-palette {
+    @if $theme == 'default' {
+      @each $name, $color in $palette {
+        @if meta.type-of($color) == map {
+          @each $clrname, $value in $color {
+            @if $clrname == 'base' {
+              --clr-#{$name}: #{cnvrt-clr($value, $format)};
+            } @else {
+              --clr-#{$name}-#{$clrname}: #{cnvrt-clr($value, $format)};
+            }
+          }
+        } @else {
+          --clr-#{$name}: #{cnvrt-clr($color, $format)};
+        }
+      }
+    }
   }
 }

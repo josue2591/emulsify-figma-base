@@ -1,7 +1,12 @@
 @use './typography' as *;
 
-// Create CSS custom properties for typography tokens.
+// Create CSS custom properties for typography
 :root {
+  // Font sizes
+  @each $name, $value in $font-sizes {
+    --fs-#{$name}: #{$value};
+  }
+
   // Font families
   @each $name, $value in $font-families {
     --ff-#{$name}: #{$value};
@@ -12,8 +17,13 @@
     --fw-#{$name}: #{$value};
   }
 
-  // Letter-spacing
-  @each $name, $value in $tracking {
-    --tracking-#{$name}: #{$value};
+  // Line heights
+  @each $name, $value in $line-heights {
+    --lh-#{$name}: #{$value};
+  }
+
+  // Letter spacings
+  @each $name, $value in $letter-spacings {
+    --ls-#{$name}: #{$value};
   }
 }

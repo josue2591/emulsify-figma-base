@@ -1,34 +1,51 @@
 @use 'sass:map';
 @use '../typography/typography' as *;
 
+// Function to get the font size
 @function fontsize($size) {
   @if map.has-key($font-sizes, $size) {
     @return var(--fs-#{$size}, map.get($font-sizes, $size));
   } @else {
-    @error 'fontsize(#{$size}) not in $font-sizes map.';
+    /* stylelint-disable-next-line at-rule-no-unknown */
+    @error 'fontsize(#{$size}); does not exist in the $fontsizes map. See font-variables.scss for available parameters.';
   }
 }
 
+// Function to get the font family
 @function fontfamily($family) {
   @if map.has-key($font-families, $family) {
     @return var(--ff-#{$family}, map.get($font-families, $family));
   } @else {
-    @error 'fontfamily(#{$family}) not in $font-families map.';
+    /* stylelint-disable-next-line at-rule-no-unknown */
+    @error 'fontfamily(#{$family}); does not exist in the $fontfamilies map. See font-variables.scss for available parameters.';
   }
 }
 
+// Function to get the font weight
 @function fontweight($weight) {
   @if map.has-key($font-weights, $weight) {
-    @return var(--fw-#{$weight}, map.get($font-weights, $weight));
+    @return var(--fw-#{$weight}, map.get($font-weights  , $weight));
   } @else {
-    @error 'fontweight(#{$weight}) not in $font-weights map.';
+    /* stylelint-disable-next-line at-rule-no-unknown */
+    @error 'fontweight(#{$weight}); does not exist in the $fontweights map. See font-variables.scss for available parameters.';
   }
 }
 
-@function lineheight($lh) {
-  @if map.has-key($line-heights, $lh) {
-    @return var(--lh-#{$lh}, map.get($line-heights, $lh));
+// Function to get the line height
+@function lineheight($line) {
+  @if map.has-key($line-heights, $line) {
+    @return var(--lh-#{$line}, map.get($line-heights, $line));
   } @else {
-    @error 'lineheight(#{$lh}) not in $line-heights map.';
+    /* stylelint-disable-next-line at-rule-no-unknown */
+    @error 'lineheight(#{$line}); does not exist in the $lineheights map. See font-variables.scss for available parameters.';
+  }
+}
+// Function to get the letter spacing
+@function letterspacing($spacing) {
+  @if map.has-key($letter-spacings, $spacing) {
+    @return var(--ls-#{$spacing}, map.get($letter-spacings, $spacing));
+  } @else {
+    /* stylelint-disable-next-line at-rule-no-unknown */
+    @error 'letterspacing(#{$spacing}); does not exist in the $letterspacings map. See font-variables.scss for available parameters.';
   }
 }

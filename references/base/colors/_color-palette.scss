@@ -1,69 +1,33 @@
-// ============================================================
-// OTTER DESIGN SYSTEM — Color Palette
-// Source: OtterHabits design (Otter Orange brand)
-// ============================================================
-
-// PRIMARY — Otter Orange (#f8761d is the brand base)
-$primary-palette: (
-  50:  #fff7ed,
-  100: #ffedd5,
-  200: #fed7aa,
-  300: #fdba74,
-  400: #fb923c,
-  500: #f8761d,  // BASE — Otter Orange
-  600: #ea580c,
-  700: #c2410c,
-  800: #9a3412,
-  900: #7c2d12,
-  950: #431407,
-);
-
-// NEUTRALS — Tailwind Slate
-$slate-palette: (
-  50:  #f8fafc,
-  100: #f1f5f9,
-  200: #e2e8f0,
-  300: #cbd5e1,
-  400: #94a3b8,
-  500: #64748b,
-  600: #475569,
-  700: #334155,
-  800: #1e293b,
-  900: #0f172a,
-);
-
-// HABIT PALETTE — fixed 8-color swatch for habit tagging
-$habit-palette: (
-  emerald: #10b981,
-  blue:    #3b82f6,
-  amber:   #f59e0b,
-  red:     #ef4444,
-  violet:  #8b5cf6,
-  pink:    #ec4899,
-  cyan:    #06b6d4,
-  gray:    #475569,
-);
-
-// SEMANTIC — feedback colors
-$semantic-colors: (
-  success: #10b981,
-  warning: #f59e0b,
-  danger:  #ef4444,
-  accent:  #fbbf24,
-);
-
-// SURFACES & TEXT tokens
-$surface-tokens: (
-  bg-app:      #f9fafb,
-  bg-surface:  #ffffff,
-  bg-subtle:   #f8fafc,
-  bg-input:    #f8fafc,
-  border-soft: #f1f5f9,
-  border-base: #e2e8f0,
-  fg-1:        #0f172a,
-  fg-2:        #1e293b,
-  fg-3:        #64748b,
-  fg-4:        #94a3b8,
-  fg-5:        #cbd5e1,
-  fg-inv:      #ffffff,
+$color-palette: (
+  default: (
+    white: (
+      base: #fff,
+    ),
+    black: (
+      base: #000,
+    ),
+    red: (
+      base: #e7131a,
+      25: #de1219,
+      100: #9e0b0f,
+    ),
+    grey: (
+      base: #f7f5f3,
+      20: #f7f5f3,
+      40: #eeecea,
+      60: #b0b0b0,
+      80: #86807c,
+      100: #504c49,
+    ),
+    blue: (
+      base: #006dac,
+      25: #006dac,
+      60: #005daa,
+      100: #003a63,
+      electric: #2943fb,
+    ),
+    yellow: (
+      base: #ffca42,
+    ),
+  ),
 );

@@ -1,59 +1,237 @@
-@use 'sass:map';
-@use './typography' as *;
+@use '../functions/space' as *;
+@use '../functions/color' as *;
+@use '../functions/fonts' as *;
+@use '../functions/px2rem' as *;
+@use '../breakpoints/breakpoints' as *;
 
-// type-role($role) — apply a semantic role's full style block.
-//
-// Usage:
-//   @include type-role(display);   // 36px, weight 900, tight tracking
-//   @include type-role(label);     // 10px, weight 900, uppercase, widest tracking
-//   @include type-role(body);      // 14px, weight 500
-//
-@mixin type-role($role) {
-  $config: map.get($type-roles, $role);
+// Heading mixins
+@mixin h1-super-serif {
+  font-family: fontfamily('serif');
+  font-size: fontsize(40);
+  font-weight: fontweight(800);
+  letter-spacing: letterspacing(1);
+  line-height: 1.1;
 
-  @if $config == null {
-    @error 'type-role(#{$role}): unknown role. Available: #{map.keys($type-roles)}.';
-  }
-
-  $family-key: map.get($config, 'family');
-  @if $family-key {
-    font-family: var(--ff-#{$family-key}, #{map.get($font-families, $family-key)});
-  } @else {
-    font-family: var(--ff-sans, #{map.get($font-families, sans)});
-  }
-
-  $weight: map.get($config, 'weight');
-  @if $weight {
-    font-weight: #{$weight};
-  }
-
-  $size: map.get($config, 'size');
-  @if $size {
-    font-size: #{$size};
-  }
-
-  $lh: map.get($config, 'line-height');
-  @if $lh {
-    line-height: #{$lh};
-  }
-
-  $tracking-key: map.get($config, 'tracking');
-  @if $tracking-key {
-    letter-spacing: var(--tracking-#{$tracking-key}, #{map.get($tracking, $tracking-key)});
-  }
-
-  $transform: map.get($config, 'transform');
-  @if $transform {
-    text-transform: #{$transform};
+  @include breakpoint('large') {
+    font-size: fontsize(72);
   }
 }
 
-// Convenience shorthands
-@mixin type-display   { @include type-role(display); }
-@mixin type-title     { @include type-role(title); }
-@mixin type-subtitle  { @include type-role(subtitle); }
-@mixin type-body      { @include type-role(body); }
-@mixin type-label     { @include type-role(label); }
-@mixin type-micro     { @include type-role(micro); }
-@mixin type-stat      { @include type-role(stat); }
-@mixin type-code      { @include type-role(code); }
+@mixin h1-serif {
+  font-family: fontfamily('serif');
+  font-size: fontsize(40);
+  line-height: lineheight(46);
+  font-weight: fontweight(800);
+  letter-spacing: -0.87px;
+  line-height: 1.1;
+
+  @include breakpoint('large') {
+    font-size: fontsize(52);
+  }
+}
+
+@mixin h2-serif {
+  font-family: fontfamily('serif');
+  font-size: fontsize(30);
+  line-height: 1.1;
+  font-weight: fontweight(800);
+  letter-spacing: -0.4px;
+}
+
+@mixin h3-serif {
+  font-family: fontfamily('serif');
+  font-size: fontsize(28);
+  line-height: 1.1;
+  font-weight: fontweight(800);
+  letter-spacing: letterspacing(1);
+}
+
+@mixin h4-serif {
+  font-family: fontfamily('serif');
+  font-size: fontsize(24);
+  line-height: lineheight(31);
+  font-weight: fontweight(800);
+  letter-spacing: letterspacing(1);
+}
+
+@mixin h2-sans {
+  font-family: fontfamily('sans');
+  font-size: fontsize(30);
+  line-height: lineheight(35);
+  font-weight: fontweight(700);
+
+  @include breakpoint('large') {
+    font-size: fontsize(40);
+    line-height: lineheight(48);
+  }
+}
+
+@mixin h3-sans {
+  font-family: fontfamily('sans');
+  font-size: fontsize(27);
+  line-height: lineheight(33);
+  font-weight: fontweight(700);
+
+  @include breakpoint('large') {
+    font-size: fontsize(32);
+    line-height: lineheight(42);
+  }
+}
+@mixin h3-sans-desktop {
+  font-family: fontfamily('sans');
+  font-size: fontsize(32);
+  line-height: lineheight(42);
+  font-weight: fontweight(700);
+}
+
+@mixin h4-sans {
+  font-family: fontfamily('sans');
+  font-size: fontsize(24);
+  line-height: lineheight(30);
+  font-weight: fontweight(700);
+
+  @include breakpoint('large') {
+    font-size: fontsize(26);
+    line-height: lineheight(34);
+  }
+}
+
+@mixin h5-sans {
+  font-family: fontfamily('sans');
+  font-size: fontsize(22);
+  line-height: lineheight(36);
+  font-weight: fontweight(700);
+}
+
+@mixin h5-sans-desktop {
+  font-family: fontfamily('sans');
+  font-size: fontsize(22);
+  line-height: lineheight(26);
+  font-weight: fontweight(700);
+}
+
+@mixin h6-sans {
+  font-family: fontfamily('sans');
+  font-size: fontsize(20);
+  line-height: lineheight(27);
+  font-weight: fontweight(700);
+
+  @include breakpoint('large') {
+    font-size: fontsize(20);
+    line-height: lineheight(24);
+  }
+}
+
+// Deck mixins
+@mixin deck-large {
+  font-family: fontfamily('sans');
+  font-size: fontsize(18);
+  line-height: lineheight(26);
+  font-weight: fontweight(500);
+
+  @include breakpoint('large') {
+    font-size: fontsize(22);
+    line-height: lineheight(31);
+  }
+}
+
+@mixin deck-small {
+  font-family: fontfamily('sans');
+  font-size: fontsize(16);
+  line-height: lineheight(25);
+  font-weight: fontweight(500);
+
+  @include breakpoint('large') {
+    font-size: fontsize(18);
+  }
+}
+
+// Body mixins
+@mixin body($weight: 'normal') {
+  font-family: fontfamily('sans');
+  font-size: fontsize(18);
+  line-height: 31.5px;
+
+  @if $weight == 'bold' {
+    font-weight: fontweight(700);
+  } @else {
+    font-weight: fontweight(500);
+  }
+
+  @include breakpoint('medium') {
+    font-size: fontsize(20);
+    line-height: lineheight(35);
+  }
+}
+
+@mixin highlight-text() {
+  font-family: fontfamily('sans');
+  font-size: fontsize(20);
+  line-height: lineheight(31);
+  font-weight: fontweight(500);
+
+  @include breakpoint('large') {
+    font-size: fontsize(20);
+    line-height: lineheight(31);
+  }
+}
+
+@mixin small-body($weight: 'normal') {
+  font-family: fontfamily('sans');
+  font-size: fontsize(16);
+  line-height: lineheight(25);
+
+  @if $weight == 'bold' {
+    font-weight: fontweight(700);
+  } @else {
+    font-weight: fontweight(500);
+  }
+}
+
+@mixin small-body-desktop($weight: 'normal') {
+  font-family: fontfamily('sans');
+  font-size: fontsize(16);
+  line-height: lineheight(25);
+
+  @if $weight == 'bold' {
+    font-weight: fontweight(700);
+  } @else {
+    font-weight: fontweight(500);
+  }
+}
+
+@mixin button-text() {
+  font-family: fontfamily('sans');
+  font-size: fontsize(14);
+  line-height: lineheight(19);
+  font-weight: fontweight(700);
+  letter-spacing: px2rem(1.2);
+}
+
+@mixin small-text($weight: 'normal') {
+  font-family: fontfamily('sans');
+  font-size: fontsize(13);
+  line-height: lineheight(21);
+
+  @if $weight == 'bold' {
+    font-weight: fontweight(700);
+  } @else if $weight == 'semibold' {
+    font-weight: fontweight(500);
+  } @else {
+    font-weight: fontweight(500);
+  }
+}
+
+@mixin small-serif() {
+  font-family: fontfamily('serif');
+  font-size: fontsize(16);
+  line-height: lineheight(28);
+  font-weight: fontweight(700);
+}
+
+@mixin image-caption() {
+  font-family: fontfamily('sans');
+  font-size: fontsize(10);
+  line-height: lineheight(18);
+  font-weight: fontweight(500);
+}

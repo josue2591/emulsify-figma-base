@@ -1,0 +1,71 @@
+/*
+ * Benton Sans webfont declarations
+ *
+ * Webfont: Benton Sans
+ * Local @font-face declarations.
+ */
+
+$benton-url: '/themes/custom/bcj/assets/fonts/benton';
+
+@font-face {
+  font-family: 'BCJ Benton Sans';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('#{$benton-url}/Benton-Light.woff') format('woff'),
+       url('#{$benton-url}/Benton-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'BCJ Benton Sans';
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+  src: url('#{$benton-url}/Benton-RegularItalic.woff2') format('woff2'),
+       url('#{$benton-url}/Benton-RegularItalic.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'BCJ Benton Sans';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('#{$benton-url}/Benton-Regular.woff2') format('woff2'),
+       url('#{$benton-url}/Benton-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'BCJ Benton Sans';
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+  src: url('#{$benton-url}/Benton-BoldItalic.woff2') format('woff2'),
+       url('#{$benton-url}/Benton-BoldItalic.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'BCJ Benton Sans';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('#{$benton-url}/Benton-Bold.woff2') format('woff2'),
+       url('#{$benton-url}/Benton-Bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'BCJ Benton Sans';
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+  src: url('#{$benton-url}/Benton-ExtraboldItalic.woff2') format('woff2'),
+       url('#{$benton-url}/Benton-ExtraboldItalic.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'BCJ Benton Sans';
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  src: url('#{$benton-url}/Benton-Extrabold.woff2') format('woff2'),
+       url('#{$benton-url}/Benton-Extrabold.woff') format('woff');
+}

@@ -15,9 +15,12 @@
   @include visually-hidden;
 }
 
+// These are abstracted from the general use `focus` mixin below to support
+// use-cases like `focus-within` that apply to an "outer" element when something
+// "inside" has focus. e.g. The utility nav search box.
 @mixin focus-styles {
-  outline: space('xs') dotted clr('interaction-focus') !important;
-  outline-offset: space('xs');
+  outline: space(1) dotted clr(grey) !important;
+  outline-offset: space(1);
 }
 
 @mixin focus {
@@ -25,6 +28,9 @@
     @include focus-styles;
   }
 
+  // Remove browser focus indicator from browsers that support `:focus-visible`
+  // This allows older browsers (e.g. Safari) to show default styles, while
+  // modern browsers use our focus designs.
   &:focus:not(:focus-visible) {
     outline: none;
   }
@@ -37,6 +43,51 @@ body[data-gallery-active='true'] {
   max-height: 100vh;
 }
 
+// Prevent all instances of double returns
 p + br {
   display: none;
+}
+
+// Add a halftone pattern to the background of an element
+// @param $position: top or bottom
+// @example
+//   .element {
+//     @include bg-dots-pattern(top);
+//   }
+@mixin bg-dots-pattern($position: top, $size: large) {
+  @if $size == large {
+    &::before,
+    &::after {
+      background: transparent url('/themes/custom/bcj/assets/images/BrennanCenter_websiteRedesign_halftone_main.png') no-repeat;
+    }
+  } @else if $size == small {
+    &::before,
+    &::after {
+      background: transparent url('/themes/custom/bcj/assets/images/BrennanCenter_websiteRedesign_halftone_main_right.png') no-repeat;
+    }
+  }
+
+  &::before,
+  &::after {
+    z-index: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: 900px auto;
+    background-position: top left;
+    top: 0;
+    left: 0;
+    opacity: .2;
+  }
+
+  @if $position == top {
+    &::before {
+      content: "";
+    }
+  } @else if $position == bottom {
+    &::after {
+      content: "";
+      transform: rotate(180deg);
+    }
+  }
 }

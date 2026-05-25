@@ -1,0 +1,11 @@
+/*
+ * Font entry point – imports all webfont declarations
+ *
+ * Webfont: Benton Sans
+ * Webfont: Editor
+ *
+ * Local @font-face declarations.
+ */
+
+@use './benton';
+@use './editor';

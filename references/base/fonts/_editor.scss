@@ -1,0 +1,128 @@
+/*
+ * Editor webfont declarations
+ *
+ * Webfont: Editor
+ * Local @font-face declarations.
+ */
+
+$editor-url: '/themes/custom/bcj/assets/fonts/editor';
+
+@font-face {
+    font-family: 'Editor';
+    src: url('#{$editor-url}/Editor-Bold.eot');
+    src: url('#{$editor-url}/Editor-Bold.eot?#iefix') format('embedded-opentype'),
+        url('#{$editor-url}/Editor-Bold.woff2') format('woff2'),
+        url('#{$editor-url}/Editor-Bold.woff') format('woff'),
+        url('#{$editor-url}/Editor-Bold.ttf') format('truetype'),
+        url('#{$editor-url}/Editor-Bold.svg#Editor-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Editor';
+    src: url('#{$editor-url}/Editor-BoldItalic.eot');
+    src: url('#{$editor-url}/Editor-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('#{$editor-url}/Editor-BoldItalic.woff2') format('woff2'),
+        url('#{$editor-url}/Editor-BoldItalic.woff') format('woff'),
+        url('#{$editor-url}/Editor-BoldItalic.ttf') format('truetype'),
+        url('#{$editor-url}/Editor-BoldItalic.svg#Editor-BoldItalic') format('svg');
+    font-weight: bold;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Editor';
+    src: url('#{$editor-url}/Editor-RegularItalic.eot');
+    src: url('#{$editor-url}/Editor-RegularItalic.eot?#iefix') format('embedded-opentype'),
+        url('#{$editor-url}/Editor-RegularItalic.woff2') format('woff2'),
+        url('#{$editor-url}/Editor-RegularItalic.woff') format('woff'),
+        url('#{$editor-url}/Editor-RegularItalic.ttf') format('truetype'),
+        url('#{$editor-url}/Editor-RegularItalic.svg#Editor-RegularItalic') format('svg');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Editor';
+    src: url('#{$editor-url}/Editor-LightItalic.eot');
+    src: url('#{$editor-url}/Editor-LightItalic.eot?#iefix') format('embedded-opentype'),
+        url('#{$editor-url}/Editor-LightItalic.woff2') format('woff2'),
+        url('#{$editor-url}/Editor-LightItalic.woff') format('woff'),
+        url('#{$editor-url}/Editor-LightItalic.ttf') format('truetype'),
+        url('#{$editor-url}/Editor-LightItalic.svg#Editor-LightItalic') format('svg');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Editor';
+    src: url('#{$editor-url}/Editor-MediumItalic.eot');
+    src: url('#{$editor-url}/Editor-MediumItalic.eot?#iefix') format('embedded-opentype'),
+        url('#{$editor-url}/Editor-MediumItalic.woff2') format('woff2'),
+        url('#{$editor-url}/Editor-MediumItalic.woff') format('woff'),
+        url('#{$editor-url}/Editor-MediumItalic.ttf') format('truetype'),
+        url('#{$editor-url}/Editor-MediumItalic.svg#Editor-MediumItalic') format('svg');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Editor';
+    src: url('#{$editor-url}/Editor-Medium.eot');
+    src: url('#{$editor-url}/Editor-Medium.eot?#iefix') format('embedded-opentype'),
+        url('#{$editor-url}/Editor-Medium.woff2') format('woff2'),
+        url('#{$editor-url}/Editor-Medium.woff') format('woff'),
+        url('#{$editor-url}/Editor-Medium.ttf') format('truetype'),
+        url('#{$editor-url}/Editor-Medium.svg#Editor-Medium') format('svg');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Editor';
+    src: url('#{$editor-url}/Editor-Extrabold.eot');
+    src: url('#{$editor-url}/Editor-Extrabold.eot?#iefix') format('embedded-opentype'),
+        url('#{$editor-url}/Editor-Extrabold.woff2') format('woff2'),
+        url('#{$editor-url}/Editor-Extrabold.woff') format('woff'),
+        url('#{$editor-url}/Editor-Extrabold.ttf') format('truetype'),
+        url('#{$editor-url}/Editor-Extrabold.svg#Editor-Extrabold') format('svg');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Editor';
+    src: url('#{$editor-url}/Editor-Regular.eot');
+    src: url('#{$editor-url}/Editor-Regular.eot?#iefix') format('embedded-opentype'),
+        url('#{$editor-url}/Editor-Regular.woff2') format('woff2'),
+        url('#{$editor-url}/Editor-Regular.woff') format('woff'),
+        url('#{$editor-url}/Editor-Regular.ttf') format('truetype'),
+        url('#{$editor-url}/Editor-Regular.svg#Editor-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Editor';
+    src: url('#{$editor-url}/Editor-Light.eot');
+    src: url('#{$editor-url}/Editor-Light.eot?#iefix') format('embedded-opentype'),
+        url('#{$editor-url}/Editor-Light.woff2') format('woff2'),
+        url('#{$editor-url}/Editor-Light.woff') format('woff'),
+        url('#{$editor-url}/Editor-Light.ttf') format('truetype'),
+        url('#{$editor-url}/Editor-Light.svg#Editor-Light') format('svg');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Editor';
+    src: url('#{$editor-url}/Editor-ExtraboldItalic.eot');
+    src: url('#{$editor-url}/Editor-ExtraboldItalic.eot?#iefix') format('embedded-opentype'),
+        url('#{$editor-url}/Editor-ExtraboldItalic.woff2') format('woff2'),
+        url('#{$editor-url}/Editor-ExtraboldItalic.woff') format('woff'),
+        url('#{$editor-url}/Editor-ExtraboldItalic.ttf') format('truetype'),
+        url('#{$editor-url}/Editor-ExtraboldItalic.svg#Editor-ExtraboldItalic') format('svg');
+    font-weight: 800;
+    font-style: italic;
+}

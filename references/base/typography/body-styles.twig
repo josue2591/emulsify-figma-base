@@ -1,12 +1,13 @@
 <section role="region" aria-labelledby="body-styles-heading" class="sb-region">
   <header class="sb-header">
     <h2 id="body-styles-heading" class="sb-header__title">Body Styles</h2>
-    <p class="sb-header__subtitle">SASS mixins for body text with their font declarations.</p>
+    <p class="sb-header__subtitle">SASS mixins for bodies with their font declarations.</p>
   </header>
 
   <div class="sb-content">
     <ul class="sb-list">
       {% for key, body in items %}
+        {# Format the key like "desktop/body-bold" -> "Desktop/Body Bold" #}
         {% set key_parts = key|split('/') %}
         {% set display_key = key_parts[0]|capitalize ~ '/' ~ (key_parts|slice(1)|join('/')|replace({'-':' '})|title) %}
         <li class="sb-list__item">
@@ -32,7 +33,25 @@
                 </div>
               </div>
               <div class="sb-list__content-section">
-                <p class="sb-body-preview" style="font-family: {{ body.font }}; font-size: {{ body.size }}; font-weight: {{ body.weight }}; line-height: {{ body.line_height }};">
+                <div class="sb-list__content-item">
+                  <p class="sb-list__content-item-label">Letter Spacing</p>
+                  <p class="sb-list__content-item-value">{{ body.letter_spacing }}</p>
+                </div>
+                <div class="sb-list__content-item">
+                  <p class="sb-list__content-item-label">Text Decoration</p>
+                  <p class="sb-list__content-item-value">{{ body.text_decoration }}</p>
+                </div>
+                <div class="sb-list__content-item">
+                  <p class="sb-list__content-item-label">Paragraph Spacing</p>
+                  <p class="sb-list__content-item-value">{{ body.paragraph_spacing }}</p>
+                </div>
+                <div class="sb-list__content-item">
+                  <p class="sb-list__content-item-label">Case</p>
+                  <p class="sb-list__content-item-value">{{ body.case }}</p>
+                </div>
+              </div>
+              <div class="sb-list__content-section">
+                <p class="sb-body-preview" style="font-family: {{ body.font }}; font-size: {{ body.size }}; font-weight: {{ body.weight }}; line-height: {{ body.line_height }}; letter-spacing: {{ body.letter_spacing }}; {% if body.text_decoration is defined %}text-decoration: {{ body.text_decoration }};{% endif %}">
                   {{ body_sample_text }}
                 </p>
               </div>

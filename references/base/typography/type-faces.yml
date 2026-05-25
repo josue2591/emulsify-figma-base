@@ -1,28 +1,31 @@
 families:
-  - name: Inter
-    id: 'Inter, system-ui, sans-serif'
+  - name: Editor
+    id: 'Editor, serif'
+    styles:
+      - name: Extrabold
+        weight: 800
+        style: normal
+      - name: Extrabold
+        weight: 800
+        style: italic
+  - name: Benton Sans
+    id: 'Benton Sans, sans-serif'
     styles:
       - name: Regular
-        weight: 400
+        weight: 500
         style: normal
       - name: Regular Italic
-        weight: 400
+        weight: 500
         style: italic
       - name: Medium
-        weight: 500
+        weight: 700
         style: normal
       - name: Medium Italic
-        weight: 500
+        weight: 700
         style: italic
       - name: Bold
-        weight: 700
+        weight: 800
         style: normal
       - name: Bold Italic
-        weight: 700
-        style: italic
-      - name: Black
-        weight: 900
-        style: normal
-      - name: Black Italic
-        weight: 900
+        weight: 800
         style: italic

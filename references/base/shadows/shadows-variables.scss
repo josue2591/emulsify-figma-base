@@ -1,8 +1,0 @@
-@use './shadows' as *;
-
-// Create CSS custom properties for each shadow.
-:root {
-  @each $name, $value in $shadows {
-    --shadow-#{$name}: #{$value};
-  }
-}

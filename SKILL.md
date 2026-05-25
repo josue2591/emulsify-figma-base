@@ -1,33 +1,79 @@
 ---
-name: emulsify-design-base
+name: emulsify-figma-base
 description: >
-  Builds a complete Emulsify design system base from an Anthropic Design API URL.
-  Use this skill any time the user provides a design URL of the form
-  `https://api.anthropic.com/v1/design/h/{ID}` and wants to scaffold or refresh
-  the `src/components/base/` layer of an Emulsify Drupal theme — including SCSS
-  token files, Sass functions, Storybook documentation stories, and Storybook
-  config files (`preview-head.css`, `preview.js`). Also trigger when the user
-  says things like "apply this design to Emulsify", "update the design tokens",
-  "rebuild the base component layer", or "sync Storybook with the design system".
-  This skill handles the full end-to-end workflow: download → extract → parse
-  tokens → generate files → verify build.
+  Builds a complete Emulsify design system base from a Figma file via the
+  Figma MCP. Use this skill any time the user provides a figma.com URL
+  (file or frame) and wants to scaffold or refresh the `src/components/base/`
+  layer of an Emulsify Drupal theme — including SCSS token files, Sass
+  functions, Storybook documentation stories, and Storybook config files
+  (`preview-head.css`, `preview.js`). Also trigger when the user says things
+  like "generate Emulsify base from Figma", "apply this Figma design to
+  Emulsify", "create the design system from Figma", "build the base from
+  Figma", or invokes the `/emulsify-figma-base` slash command. Assumes a
+  fresh / empty Emulsify child theme (no existing components in
+  `src/components/`). For non-Figma inputs (Anthropic Design API URL),
+  use the sibling `emulsify-design-base` skill instead.
 ---
 
-# Emulsify Design Base Skill
+# Emulsify Figma Base Skill
 
 ## Overview
 
-This skill scaffolds or fully rebuilds the `src/components/base/` layer of an
-Emulsify Drupal theme from a live Anthropic Design API endpoint.
+This skill scaffolds the `src/components/base/` layer of an empty Emulsify
+Drupal child theme using design tokens read from a Figma file via the
+Figma MCP server. Output: full SCSS token system, Sass functions, Storybook
+stories per category, and the two design-system-dependent Storybook config
+files (`preview-head.css`, `preview.js`).
 
-**How reference files are used:** The `references/` directory contains real,
-working files from a canonical Emulsify theme. Read each reference file in full
-before writing its counterpart in the target theme. Substitute only the token
-values — preserve all Sass structure, Twig markup, JS export names, and class
+**Scope guardrails:**
+
+- Assumes a **fresh / empty Emulsify theme** like the canonical `bowl`
+  scaffold (empty `src/components/`, default `config/emulsify-core/storybook/`
+  stubs). Does not audit or back-compat existing components.
+- Generates `preview-head.css`, `preview.js`, **and** `main.js` (required
+  for any base/ output to compile — see Step 5). Does **not** modify
+  `preview-head.html` or `preview-head.js` — those are project-specific
+  extras (e.g. GSAP, clipboard JS), not design-system fundamentals.
+- Scope is `base/` only — does not generate atoms / molecules / organisms.
+  For atom/molecule/organism work, use the sibling
+  `emulsify-figma-component` skill.
+
+**How reference files are used:** the `references/` directory is a real
+snapshot of a working `src/components/base/` design system plus its
+Storybook config files. Read each reference file in full before writing
+its counterpart in the target theme. Substitute only the token values —
+preserve all Sass structure, Twig markup, JS export names, and class
 names exactly as they appear in the reference.
 
-See `references/README.md` for the complete file map (reference path →
-target path for every file in this skill).
+See `references/README.md` for the complete reference → target file map.
+
+**Categories present in the reference** (and therefore in the skill's
+default output): `breakpoints`, `colors`, `fonts`, `functions`, `icons`,
+`motion`, `spacing`, `typography`, `utility`.
+
+**Border-radius and shadows are conditional:** if the Figma file defines
+`border-radius` or `box-shadow` tokens, generate a `border-radius/` folder
+and/or `shadows/` folder following the **spacing folder's structure**
+exactly — same file roles, same function shape. See "Conditional
+categories" in Step 4 for the file recipe. No need to ask the user to
+confirm; presence of tokens in Figma is the trigger.
+
+---
+
+## Step 0a — Choose source type
+
+**Before any other prompt**, ask the user:
+
+> "Are you supplying design tokens from a **PDF** or from **Figma**?"
+
+- If **PDF**: respond with —
+  > "PDF support is planned for v2 of this skill. Please provide a Figma
+  > `/design/` URL instead."
+  
+  Then continue to Step 0 with the Figma flow.
+- If **Figma**: continue directly to Step 0.
+
+This prompt is mandatory even if the user already pasted a Figma URL — confirm once so the source choice is explicit, then proceed.
 
 ---
 
@@ -37,73 +83,267 @@ Before writing any files, confirm:
 
 | Input | How to get it |
 |---|---|
-| **Design URL** | Provided by the user — `https://api.anthropic.com/v1/design/h/{ID}` |
+| **Figma URL** | Provided by the user. Must be a `/design/` URL **with a `node-id` query param** — e.g. `https://www.figma.com/design/{fileKey}/{name}?node-id=486-1939`. **Prefer a page-level or root "tokens" frame node** (right-click the page tab or top-level tokens frame in Figma → "Copy link to selection"). A deeply nested node returns only the variables referenced from that node and its descendants — full coverage requires a top-level node. Reject `/make/` URLs. If the URL has no `node-id`, call `get_metadata` with only `fileKey` to list pages and ask the user to pick one. |
 | **Theme root** | Path to `web/themes/custom/{theme-name}/` in the repo |
 | **Theme machine name** | Derived from the theme directory name (e.g., `my_theme`) |
+| **Naming flag** | `--semantic` (default) or `--literal` |
+| **Dark mode flag** | Auto-detect (default) or `--dark` to force, `--no-dark` to skip |
 
-If the theme root is ambiguous, list candidate directories and ask.
-
----
-
-## Step 1 — Fetch and extract the design archive
-
-```bash
-# 1a. Download the archive
-curl -L "{DESIGN_URL}" -o /tmp/design-archive.tar.gz
-
-# 1b. Extract
-mkdir -p /tmp/design-extracted
-tar -xzf /tmp/design-archive.tar.gz -C /tmp/design-extracted
-
-# 1c. Inspect
-find /tmp/design-extracted -type f | sort
-```
-
-Identify the canonical token CSS file. Look for (in priority order):
-1. `colors_and_type.css`
-2. Any file matching `*tokens*.css` or `*variables*.css`
-3. The root-level `*.css` file with the most `:root` custom properties
-
-Read that file in full — it is the single source of truth for all token values.
+If the theme root is ambiguous, list candidate directories under
+`web/themes/custom/` and ask. If the theme is **not** an empty Emulsify
+scaffold (i.e. `src/components/` has existing components), warn the user
+and ask whether to proceed anyway — this skill does not audit.
 
 ---
 
-## Step 2 — Parse and inventory the design tokens
+## Step 1 — Read tokens from Figma
 
-Extract every CSS custom property from the `:root {}` block. Group by prefix:
+Auto-detect path with three tiers:
 
-| Category | Typical CSS var prefixes |
+1. **1a** — Single-URL Variables call. Works when the Figma file publishes Variables. One link = all categories.
+2. **1b** — Per-category sequential prompts. Triggered when Variables empty. Ask user one link at a time, category by category, in a fixed order. Each link is parsed independently and read via `get_metadata` + `get_design_context`.
+3. **1c** — Stop and ask. If both prior tiers yield nothing usable.
+
+> **Mandatory prerequisite:** before any `mcp__plugin_figma_figma__use_figma`
+> call, invoke the `figma:figma-use` skill (per Figma MCP server
+> instructions). Read-only Figma MCP tools (`get_variable_defs`,
+> `get_metadata`, `get_design_context`, `get_screenshot`) do not require
+> this, but loading `figma-use` is harmless if you may later need to write.
+
+> **Critical — desktop NOT required.** The Figma MCP plugin uses the
+> remote endpoint `https://mcp.figma.com/mcp`. You do **not** need to
+> tell the user to open the Figma desktop app or "select a node". All
+> read tools take the target as explicit `fileKey` + `nodeId` parameters
+> extracted from the URL. If you get a "need selection" / "no node"
+> error, the cause is a missing or malformed `nodeId` in the call — fix
+> the call, do not ask the user to open Figma.
+
+### 1.0 Parse the Figma URL
+
+Every read tool below requires `fileKey` (always) and `nodeId` (always
+for `get_variable_defs` / `get_design_context`; optional for `get_metadata`).
+For the **1b per-category fallback**, each category URL is parsed
+independently — the same shape rules apply per URL.
+
+URL shape: `https://www.figma.com/design/{fileKey}/{slug}?node-id={x}-{y}`
+
+| Param | How to extract |
 |---|---|
-| Colors | `--color-*`, `--palette-*`, `--primary-*`, `--neutral-*` |
-| Spacing | `--space-*`, `--spacing-*` |
-| Typography | `--ff-*`, `--fw-*`, `--fs-*`, `--tracking-*`, `--lh-*` |
-| Radii | `--radius-*`, `--rounded-*` |
-| Shadows | `--shadow-*`, `--elevation-*` |
-| Breakpoints | `--bp-*`, `--screen-*` |
+| `fileKey` | Path segment after `/design/`. Example: `https://figma.com/design/ABC123/My-File?node-id=486-1939` → `fileKey = ABC123` |
+| `nodeId` | `node-id` query param with `-` replaced by `:`. Example: `node-id=486-1939` → `nodeId = 486:1939` |
 
-Output a brief inventory table before generating any files:
+**Variants:**
+- Branch URLs (`/design/{fileKey}/branch/{branchKey}/{slug}`) → use `branchKey` as `fileKey`
+- Figma Make URLs (`/make/{makeFileKey}/...`) → skill **does not support** these; tell the user
+- FigJam (`/board/`) / Slides (`/slides/`) → `get_metadata` does not support; only the variable + design-context tools may work
+
+**If the URL has no `node-id` query param:** do **not** guess a nodeId.
+Call `get_metadata` with only `fileKey` (omit nodeId) — it returns the
+top-level pages list. Show the user the pages and ask which one to
+target, then ask for a node-specific URL (right-click frame in Figma →
+"Copy link to selection") and restart Step 1.
+
+### 1a. Try Figma Variables (preferred — one link covers everything)
+
+Call `mcp__plugin_figma_figma__get_variable_defs` with `fileKey` +
+`nodeId`. Both are required.
+
+Variables in Figma are **file-scoped** — one call from a page-level or
+root tokens frame returns every variable referenced anywhere downstream
+of that node. When the Figma file uses Variables, this single call is
+all you need.
+
+Parse returned variable collections. Group variables into token categories
+by name match (case-insensitive, slash-separated paths):
+
+| Category | Name patterns to match |
+|---|---|
+| Colors | `color/*`, `brand/*`, `neutral/*`, `surface/*`, `text/*`, `bg/*`, `border/*`, `interaction/*`, `palette/*`, `*-color`, `*-bg`, `*-fg` |
+| Spacing | `space/*`, `spacing/*`, `gap/*`, `padding/*`, `margin/*` |
+| Typography | `font/*`, `type/*`, `text/*size*`, `lh/*`, `line-height/*`, `tracking/*`, `letter-spacing/*`, `font-weight/*`, `fw/*` |
+| Border-radius | `radius/*`, `rounded/*`, `corner/*`, `border-radius/*` |
+| Shadows | `shadow/*`, `elevation/*` |
+| Breakpoints | `breakpoint/*`, `screen/*`, `bp/*` |
+| Opacity | `opacity/*`, `alpha/*` |
+
+**Detect dark mode:** if any collection has multiple modes and one matches
+`/dark|night/i`, enable dual-mode generation. Otherwise single (light) mode.
+
+If `get_variable_defs` returns non-empty → proceed to Step 1d (inventory).
+If it returns empty (styles-only file) → go to **1b**.
+
+### 1b. Per-category sequential prompts (Variables-empty fallback)
+
+When the file has no Variables, ask the user **one Figma link per
+category**, in order. Tell them up front:
+
+> "No Figma variables detected. To build the design system I need one
+> Figma link per category. I'll ask one at a time. Reply `skip` to omit
+> a category. For each link, right-click the frame in Figma → 'Copy
+> link to selection' so the URL has a `node-id`."
+
+Then iterate, prompting **one category at a time** in this exact order:
+
+1. **Colors** — frame with the palette / color tokens
+2. **Spacing** — frame with the spacing scale
+3. **Typography** — frame with type styles (font sizes, weights, line heights)
+4. **Breakpoints** — frame defining breakpoint widths
+5. **Border-radius** *(conditional — `skip` to omit)*
+6. **Shadows** *(conditional — `skip` to omit)*
+7. **Motion** *(conditional — `skip` to omit)*
+8. **Fonts** *(font families; usually inferable from typography frame — ask only if not obvious)*
+
+For each prompt, present:
+
+> "Paste the Figma link to the **{category}** frame (or type `skip`):"
+
+For each non-`skip` answer:
+- Parse the URL → `fileKey` + `nodeId` (per Step 1.0)
+- Call `mcp__plugin_figma_figma__get_metadata` and
+  `mcp__plugin_figma_figma__get_design_context` on that `fileKey` + `nodeId`
+- Extract per-category:
+  - **Colors** — fills (solid + gradient stops)
+  - **Spacing** — frame names like `4`, `8`, `16` with width/height matching value
+  - **Typography** — text node `fontFamily`, `fontWeight`, `fontSize`, `lineHeight`, `letterSpacing`
+  - **Breakpoints** — frame widths labeled `sm`, `md`, `lg`, etc.
+  - **Border-radius** — `cornerRadius` on rectangles, labeled
+  - **Shadows** — `effects` array (drop shadow + inner shadow)
+  - **Motion** — text annotations or named easing/duration tokens
+  - **Fonts** — `fontFamily` strings (deduplicate across the typography frame)
+
+Handle skips:
+- **Required categories** (colors, spacing, typography, breakpoints) skipped →
+  warn the user:
+  > "Skipping a required category means the generated `{category}/`
+  > folder will contain only the reference scaffolding with empty maps.
+  > Proceed anyway? (yes/no)"
+- **Conditional categories** (border-radius, shadows, motion) skipped → omit
+  the folder entirely; no warning.
+
+If every category is skipped or returns nothing usable → go to **1c**.
+
+### 1c. Last-resort — stop and ask
+
+If both 1a (Variables empty) and 1b (every category skipped or empty)
+yield nothing, stop and ask the user to re-check their Figma file
+permissions / URLs. Do not attempt to generate files from no data.
+
+### 1d. Emit a token inventory before writing
+
+Print a table like:
 
 ```
-Colors:      primary (50–900), neutral (50–950), semantic (surface, on-surface…)
-Spacing:     0–24 (8pt scale)
-Fonts:       Inter (body), Fraunces (display)
-Radii:       none, sm, md, lg, xl, 2xl, full
-Shadows:     sm, md, lg, xl, inner, none
-Breakpoints: sm, md, lg, xl, 2xl
+Source:      Figma variables (file: <name>, 3 collections)
+Modes:       light, dark
+Colors:      brand (1–3), text (heading, body), bg (light, default, dark),
+             border (light, default, dark), interaction (text, bg, hover, focus),
+             status (info, warning, error, success)
+Spacing:     xs, sm, md, lg, xl, xxl
+Fonts:       <family list from --ff-* / typography variables>
+Type scale:  display, headline-1..5, lead, body, small, caption, x-small
+Weights:     thin, regular, medium, bold, extra-bold
+Border-radius: sm, md, lg
+Shadows:       sm, md, lg, xl
+Breakpoints: sm, md, lg, xl, xxl
 ```
 
-> **Critical:** Use the design's exact var names. Never apply legacy theme
-> prefixes like `--c-*` or `--s-bcj-*`.
+Confirm with user before proceeding to file writes.
 
 ---
 
-## Step 3 — Read reference files, then generate output
+## Step 2 — Apply naming convention
 
-Read `references/README.md` first for the complete reference → target path map.
+### Default: `--semantic`
 
-**Rule for every file:** read the reference file → identify token values →
-replace with new design values → write to target path. Never write a file
-without reading its reference first.
+Map raw Figma names to a canonical schema. Slashes become hyphens; numeric
+scales collapse to named tiers when possible.
+
+| Figma raw | Semantic output |
+|---|---|
+| `brand/primary/500` or `brand/primary` | `brand-1` |
+| `brand/secondary` | `brand-2` |
+| `text/heading` | `text-heading` |
+| `text/body` | `text-body` |
+| `bg/default`, `surface/default` | `bg-default` |
+| `space/4`, `space/md` | `md` |
+| `radius/8`, `radius/md` | `md` |
+| `shadow/sm` | `sm` |
+| `font/heading`, `family/heading` | `heading` |
+| `font-weight/700`, `weight/bold` | `bold` |
+
+If a Figma file has multiple numeric scales under one category (e.g.
+`brand/primary/100..900`), preserve the most-used or hero values and emit
+all as `brand-primary-100`, `brand-primary-200`, etc.
+
+### `--literal`
+
+Convert slashes to dashes, kebab-case the whole name, no semantic rewrite:
+- `brand/primary/500` → `brand-primary-500`
+- `space/4` → `space-4`
+
+Resulting CSS custom properties use these prefixes regardless of flag:
+
+| Category | Prefix |
+|---|---|
+| Colors | `--clr-` |
+| Spacing | `--s-` |
+| Font size | `--fs-` |
+| Font family | `--ff-` |
+| Font weight | `--fw-` |
+| Line height | `--lh-` |
+| Letter spacing | `--ls-` |
+
+Color Sass map keys and `clr()` call sites carry the same name (no prefix
+inside the call): map key `red:`, call site `clr(red)`. Never inject a
+theme-name segment like `bcj-` or `mytheme-` into these prefixes — the
+theme name lives only in Twig namespaces and asset URL paths, which the
+skill handles separately via the `structure` tier rule.
+
+---
+
+## Step 3 — Ask about fonts
+
+List all font families discovered (from Figma variables or text styles).
+Ask the user, presenting one of:
+
+1. **Google Fonts URL** — provide the full `https://fonts.googleapis.com/css2?...`
+   URL or let the skill build one from the family list (variable axes, ital
+   + wght defaults: `0,100..900;1,100..900`)
+2. **Local @font-face** — user will drop font files in
+   `{THEME_ROOT}/assets/fonts/` and provide format(s): woff2/woff/ttf
+3. **Adobe Fonts** — provide the Typekit URL (`https://use.typekit.net/{id}.css`)
+4. **None / Drupal libraries** — declared in `{theme}.libraries.yml`,
+   skip SCSS / preview font loading
+
+This decision drives the `fonts/` folder layout:
+
+- **Local @font-face** (matches the reference exactly): write
+  `fonts/font.scss` as the entry point and one `_{family}.scss` partial
+  per font family (the reference shows two such partials as examples).
+  User must drop font files in `{THEME_ROOT}/assets/fonts/{family}/`.
+- **Google Fonts** or **Adobe Fonts**: write a single `fonts/font.scss`
+  with `@import url('...')` (replace the per-family pattern with one
+  import line) and **also** inject the `<link>` in `preview.js`.
+- **None / Drupal libraries**: leave `fonts/` out entirely; declare in
+  `{theme}.libraries.yml` (out of scope for this skill — note for user).
+
+---
+
+## Step 4 — Generate output files
+
+Read `references/README.md` first for the complete reference → target path
+map. **Every row is tagged with a tier** (`verbatim` / `structure` /
+`tokens`) — that tag dictates exactly how to handle the file:
+
+- `verbatim` → copy byte-for-byte. No edits at all.
+- `structure` → preserve markup / class names / mixin signatures / YAML
+  keys / SCSS structure. Replace **only** token values, family strings,
+  and `bcj`-namespace strings.
+- `tokens` → reference shape only. Regenerate body from the Figma token
+  inventory; do **not** carry bcj-specific values forward.
+
+Check the tier before writing each file. If a file is tagged `verbatim`,
+do not "improve" it.
 
 ### Token SCSS files
 
@@ -111,44 +351,96 @@ Each category follows the same two-file pattern:
 - `_{category}.scss` — Sass map (partial, not an entry point)
 - `{category}-variables.scss` — entry point; `@use`s the map, emits `:root {}`
 
-Read and mirror each category:
+Mirror each category:
 
 | Read from `references/base/` | Write to `src/components/base/` |
 |---|---|
 | `colors/` | `colors/` |
 | `spacing/` | `spacing/` |
 | `typography/` | `typography/` |
-| `radii/` | `radii/` |
-| `shadows/` | `shadows/` |
 | `breakpoints/` | `breakpoints/` |
-| `fonts/` | `fonts/` |
+| `fonts/` | `fonts/` (see Step 3 — pattern depends on font loading strategy) |
 | `motion/` | `motion/` |
 | `utility/` | `utility/` |
+| `icons/` | `icons/` (also create `.gitkeep` for empty themes) |
+
+**Dual-mode colors:** when dark mode is enabled, emit two SCSS maps
+(`$colors-light`, `$colors-dark`) and generate both `:root { ... }` and
+`[data-theme='dark'] { ... }` (also wrap dark in
+`@media (prefers-color-scheme: dark)` so it works without a class).
 
 ### Sass function partials
 
 Read each file in `references/base/functions/` before writing its counterpart.
 
 - `_rem-calc.scss` and `_px2rem.scss` — **copy verbatim**, no token values
-- All others (`_color.scss`, `_fonts.scss`, `_space.scss`, `_radius.scss`,
-  `_shadow.scss`, `_top-border.scss`) — update `@use` path and fallback values
-  to match the new design's Sass maps
+- All others (`_color.scss`, `_fonts.scss`, `_space.scss`, `_top-border.scss`)
+  — update `@use` path and fallback values to match the new Sass maps
+- `_radius.scss` and `_shadow.scss` — **generate these when Figma defines
+  border-radius / shadow tokens** (see Conditional categories below)
 
 ### `base.scss`
 
-Read `references/base/base.scss`. Preserve the exact `@use` order. Only adjust
-if the new design adds or removes a category.
+Read `references/base/base.scss`. Preserve the exact `@use` order.
+When you generate the conditional categories `border-radius/` and/or
+`shadows/` (see below), add their `@use` lines next to `spacing` in
+`base.scss`.
+
+### Conditional categories — border-radius and shadows
+
+If the Figma token inventory (Step 1) detected `border-radius` or
+`box-shadow` tokens, generate a full folder for each, **modeled exactly
+on `spacing/`**. The reference does not contain templates for these
+folders because the spacing folder *is* the template.
+
+| File role | Spacing (reference) | Border-radius (when applicable) | Shadows (when applicable) |
+|---|---|---|---|
+| Sass map partial | `spacing/_spacing.scss` (`$spacings: (...)`) | `border-radius/_border-radius.scss` (`$border-radius: (...)`) | `shadows/_shadows.scss` (`$shadows: (...)`) |
+| CSS var entry point | `spacing/spacing-variables.scss` (emits `--s-*`) | `border-radius/border-radius-variables.scss` (emits `--radius-*`) | `shadows/shadows-variables.scss` (emits `--shadow-*`) |
+| Sass function | `functions/_space.scss` (`space()`) | `functions/_radius.scss` (`radius()`) | `functions/_shadow.scss` (`shadow()`) |
+| Storybook story JS | `spacing/spacing.stories.js` | `border-radius/border-radius.stories.js` | `shadows/shadows.stories.js` |
+| Storybook Twig | `spacing/spacing.twig` | `border-radius/border-radius.twig` | `shadows/shadows.twig` |
+| Storybook YAML | `spacing/spacing.yml` | `border-radius/border-radius.yml` | `shadows/shadows.yml` |
+
+**Function shape** (mirror `_space.scss` exactly — same `@use` /
+`map.has-key` / `var(...)` / `@error` structure):
+
+```scss
+@use 'sass:map';
+@use '../border-radius/border-radius' as *;
+
+@function radius($key) {
+  @if map.has-key($border-radius, $key) {
+    @return var(--radius-#{$key}, map.get($border-radius, $key));
+  } @else {
+    @error 'radius(#{$key}); does not exist in the $border-radius map.';
+  }
+}
+```
+
+Same shape for `shadow()` reading from `$shadows`. The Storybook story /
+Twig / YAML files for the new categories mirror the spacing trio: same
+story `title` pattern (`Base/BorderRadius`, `Base/Shadows`), same Twig
+table structure with `--radius-*` or `--shadow-*` in the CSS Variable
+column, same YAML keys (`label`, `name`, `value`, `usage`).
+
+Finally, add the new entry points to `base.scss`:
+```scss
+@use 'border-radius/border-radius-variables';   // only if border-radius detected
+@use 'shadows/shadows-variables';               // only if shadows detected
+```
 
 ### Storybook story files
 
-Each category: `.stories.js`, `.twig`, `.yml` (except `icons/` — no `.yml`).
+Each category (colors, spacing, breakpoints, typography, icons): `.stories.js`,
+`.twig`, `.yml` (except `icons/` — no `.yml`).
 
-Read the reference story files before writing each category. Typography uses
-hyphenated filenames — `type-faces`, `heading-styles`, `body-styles` — not
-camelCase.
+Read the reference story files before writing each category. Typography
+uses hyphenated filenames — `type-faces`, `heading-styles`, `body-styles`
+— not camelCase.
 
 What to update per file type:
-- **`.yml`** — replace every token name/value pair with the new design's tokens.
+- **`.yml`** — replace every token name/value pair with the new tokens.
   Preserve YAML structure exactly.
 - **`.twig`** — preserve all markup and class names. Rarely needs changes.
 - **`.stories.js`** — preserve `title` values and export names exactly.
@@ -157,95 +449,206 @@ What to update per file type:
 ### `icons/` directory
 
 Copy `references/base/icons/icons.stories.js` and `icons.twig` verbatim.
-Create `icons/.gitkeep` so the directory is tracked in git when empty.
+The reference does not include a `.gitkeep` (the reference's icons
+folder is populated). For a fresh theme, also write `icons/.gitkeep`
+so the directory is tracked in git until real SVGs land in
+`assets/icons/`.
 
 ---
 
-## Step 4 — Update Storybook config files
+## Step 5 — Update Storybook config files
 
 ### `preview-head.css`
 
-Read `references/preview-head-template.css` in full.
+Read `references/preview-head.css` in full.
 
-Replace the **entire** `:root {}` block with inlined plain CSS values from the
-design token file. No `@use`, no `@import`, no Sass of any kind — the
-sass-loader will throw `"An importer must have either canonicalize and load
-methods"` if any Sass syntax appears here.
+Prepend a `:root {}` block (the reference ships **without** one) that
+inlines every token value as **plain CSS**. No `@use`, no `@import`, no
+Sass of any kind — sass-loader rejects `:root { @use ... }` with the
+`"An importer must have either canonicalize and load methods"` error
+covered below.
 
-Required aliases to keep (`.sb-*` utility classes depend on these):
+> **Critical — colors must be RGB channel triples, not hex.** The
+> `clr()` Sass function (`references/base/functions/_color.scss`) emits
+> `rgba(var(--clr-x), $alpha)`. If `--clr-x` is `#005f89`, the browser
+> receives `rgba(#005f89, 1)` — invalid, ignored, component renders
+> with no color. Emit each color CSS var as comma-separated channels
+> (e.g. `--clr-link: 0, 95, 137;`), then any direct-CSS consumer wraps
+> with `rgb(...)` (e.g. `background-color: rgb(var(--clr-link));`).
+> The reference's existing `[data-component-theme='dark']` rule already
+> uses `rgba(var(--clr-grey-100))` — match that pattern.
+
+Example `:root {}` block (truncated):
 
 ```css
---spacing-xl:  var(--space-6, 1.5rem);
---spacing-xxl: var(--space-8, 2rem);
---spacing-lg:  var(--space-5, 1.25rem);
---spacing-md:  var(--space-4, 1rem);
---fs-small:    var(--fs-sm, 0.875rem);
---fs-caption:  var(--fs-xs, 0.75rem);
+:root {
+  /* Spacing — plain rem values */
+  --s-xs: 0.125rem;
+  --s-lg: 1rem;
+  --s-xl: 2rem;
+
+  /* Colors as RGB triples (NOT hex) — clr() wraps in rgba() */
+  --clr-white: 255, 255, 255;
+  --clr-link: 0, 95, 137;
+  --clr-link-hover-lighter: 0, 64, 91;
+  --clr-grey-1000: 8, 11, 12;
+
+  /* Required aliases — .sb-* utility classes depend on these */
+  --spacing-xl:  var(--s-xl, 2rem);
+  --spacing-lg:  var(--s-lg, 1rem);
+  --fs-small:    var(--fs-small, 1rem);
+  --fs-caption:  var(--fs-caption, 0.875rem);
+}
 ```
 
-Update `[data-component-theme='dark']` to use the design's darkest surface token.
+Update the existing `[data-component-theme='dark']` rule to point at the
+design's darkest surface token (e.g. `rgb(var(--clr-grey-1000))`).
 
 Leave all `.sb-*` class rules **unchanged**.
 
-Write result to `config/emulsify-core/storybook/preview-head.css`.
+Write result to `{THEME_ROOT}/config/emulsify-core/storybook/preview-head.css`.
 
 ### `preview.js`
 
-Read `references/preview-js-template.js` in full.
+Read `references/preview.js` in full.
 
-Update the Google Fonts `<link>` string to load only the font families present
-in the design's `--ff-*` tokens. Font loading must happen via `<link>` injected
-into the document head — never via `@import` in SCSS or JS.
+Update the Google Fonts `<link>` string (or replace with Adobe Fonts link,
+or remove entirely) per Step 3's font decision. Font loading must happen
+via `<link>` injected into the document head — never via `@import` in
+SCSS or JS.
 
-Write result to `config/emulsify-core/storybook/preview.js`.
+Update Twig namespace patterns to match the target theme machine name
+(replace `bcj` references with `{theme-machine-name}`).
+
+Write result to `{THEME_ROOT}/config/emulsify-core/storybook/preview.js`.
+
+### `main.js` (required — fixes a sass-loader incompatibility)
+
+Read `references/storybook/main.js` in full.
+
+This file overrides Storybook's `webpackFinal` hook to force
+`sass-loader` into legacy API mode. Without it, **every** component
+SCSS that the theme compiles will fail with:
+
+> `An importer must have either canonicalize and load methods, or a findFileUrl method.`
+
+Cause: Emulsify-core's storybook webpack config uses
+`node-sass-glob-importer` (legacy importer API). Dart Sass ≥ 1.45
+defaults to the modern API which rejects legacy importers. The override
+walks every webpack rule (including nested `oneOf` blocks added by
+Storybook 9) and sets `api: 'legacy'` on every `sass-loader` entry.
+
+The reference chains `extendWebpackConfig` from
+`@emulsify/core/.storybook/webpack.config.js` first, then applies the
+patch — so user `configOverrides` do not blow away Emulsify's twig/yaml
+loader setup.
+
+Substitutions when writing into the theme:
+- `[{THEME_MACHINE_NAME}]` → the target theme machine name (the
+  bracketed prefix on the `console.log` line).
+
+Write result to `{THEME_ROOT}/config/emulsify-core/storybook/main.js`.
+
+> **Note** — this file also lives in the "scope guardrails" carve-out
+> at the top of this SKILL.md. `preview-head.html` and `preview-head.js`
+> remain out of scope; only `main.js`, `preview.js`, and `preview-head.css`
+> are skill-written.
 
 ---
 
-## Step 5 — Verify the build
+## Step 6 — Verify the build
 
 ```bash
 cd {THEME_ROOT}
+npm install 2>&1 | tail -5
+# storybook needs ./dist to exist (static asset target) and
+# src/components/ui/ to exist (preview.js require.context).
+mkdir -p dist src/components/ui
+touch src/components/ui/.gitkeep
 npm run develop &
-sleep 20
+sleep 25
 curl -s http://localhost:6006/index.json | python3 -c "
 import sys, json
 data = json.load(sys.stdin)
 stories = list(data.get('entries', data.get('stories', {})).keys())
 expected = [
-  'Base/Colors', 'Base/Spacing', 'Base/Radii', 'Base/Shadows',
-  'Base/Breakpoints', 'Base/TypeFaces', 'Base/HeadingStyles',
-  'Base/BodyStyles', 'Base/Icons'
+  'Base/Colors', 'Base/Spacing', 'Base/Breakpoints',
+  'Base/TypeFaces', 'Base/HeadingStyles', 'Base/BodyStyles',
+  'Base/Icons',
+  # Add 'Base/BorderRadius' if Figma had border-radius tokens
+  # Add 'Base/Shadows' if Figma had box-shadow tokens
 ]
 missing = [e for e in expected if not any(e in s for s in stories)]
-print('MISSING:', missing if missing else 'none — all stories found ✓')
+print('MISSING:', missing if missing else 'none — all stories found')
 print('TOTAL stories:', len(stories))
 "
+# Kill storybook when done:
+kill %1 2>/dev/null
 ```
 
 Common failure modes:
 
 | Error | Fix |
 |---|---|
-| `An importer must have either canonicalize and load methods` | Remove any Sass from `preview-head.css`; inline all values as plain CSS |
+| User answered "PDF" at Step 0a | PDF parsing not yet supported. Reply: "PDF support is planned for v2. Please provide a Figma `/design/` URL instead." then resume Step 0. |
+| Figma tool says "need selection" / "no node provided" | Missing or malformed `nodeId`. Do NOT ask user to open desktop app. Re-parse the URL: `node-id=486-1939` → pass `nodeId: "486:1939"`. Both `fileKey` and `nodeId` are required for `get_variable_defs` and `get_design_context`. |
+| `get_variable_defs` returned empty but the file has Variables | The supplied `nodeId` was too deep to reach any variable-bound node. Ask user for a page-level or root tokens frame URL ("Copy link to selection" on the Figma page tab) and retry 1a. |
+| URL has no `node-id` query param | Call `get_metadata` with only `fileKey` (omit nodeId) → returns top-level pages. Ask user for a node-specific URL ("Copy link to selection" in Figma). |
+| URL contains `/make/` | Figma Make files not supported by this skill. Ask user for a regular `/design/` URL. |
+| `An importer must have either canonicalize and load methods` **inside `preview-head.css`** | Remove any Sass from `preview-head.css`; inline all values as plain CSS. |
+| `An importer must have either canonicalize and load methods` **on any `.scss` compile** (most components) | Missing `main.js` override. Write `config/emulsify-core/storybook/main.js` from `references/storybook/main.js` — it forces `sass-loader` `api: 'legacy'` so Emulsify-core's `node-sass-glob-importer` works with Dart Sass ≥ 1.45. |
+| Component background appears unset / browser DevTools shows `Invalid property value` on `background-color: rgba(#005f89, 1)` | `--clr-*` in `preview-head.css` written as hex. They must be RGB triples (e.g. `--clr-link: 0, 95, 137;`) because `clr()` wraps in `rgba(var(--clr-x), 1)`. |
+| Storybook fails to start: `Failed to load static files, no such directory: ./dist` | Run `mkdir -p {THEME_ROOT}/dist` once. The `dist/` directory is webpack's output target; storybook serves it as a static dir even when empty. |
+| Storybook fails: `Can't resolve '../../../src/components/ui/'` in preview.js | The `require.context` in preview.js needs the `ui/` (or matching layer) directory to exist. Create `src/components/ui/.gitkeep` so the directory resolves even before any UI components exist. |
 | Story missing from `/index.json` | Check `.stories.js` `title` + export name matches the reference exactly |
 | Font not loading | Ensure font `<link>` is in `preview.js`, not `@import` in CSS |
-| Wrong CSS var name | Re-read the token file; use the design's exact property names |
-| Dark theme not applying | Update `[data-component-theme='dark']` in `preview-head.css` |
+| Wrong CSS var name | Re-read the token source; use exact property names from Step 1 inventory |
+| Dark theme not applying | Update `[data-component-theme='dark']` in `preview-head.css` to use `rgb(var(--clr-x))` with the design's darkest surface token. |
+| Webpack error: cannot find `base/...` | Check `base.scss` `@use` lines match generated category folders |
+| Twig namespace not resolving | Update `bcj` → target theme machine name in `preview.js` |
 
 ---
 
 ## Output checklist
 
-- [ ] Token inventory documented before any files written
+- [ ] Token inventory printed before any files written, user confirmed
 - [ ] Every reference file read before its counterpart was generated
 - [ ] All `_`-prefixed files are Sass partials (not entry points)
 - [ ] All entry-point files have no `_` prefix
 - [ ] `base.scss` uses `@use` for every category (not `@import`)
+- [ ] `_rem-calc.scss` + `_px2rem.scss` copied verbatim
 - [ ] `preview-head.css` `:root` block is plain CSS (no Sass)
+- [ ] `preview-head.css` `--clr-*` declarations are **RGB channel triples** (`0, 95, 137`), NOT hex (`#005f89`)
+- [ ] `[data-component-theme='dark']` uses `rgb(var(--clr-x))` with design's darkest surface token
 - [ ] `.sb-*` spacing and font-size aliases present in `preview-head.css`
-- [ ] `[data-component-theme='dark']` uses design's darkest surface token
-- [ ] `preview.js` Google Fonts `<link>` updated to design's fonts only
+- [ ] `preview.js` font loading matches Step 3 decision
+- [ ] `preview.js` Twig namespaces updated to target theme machine name
+- [ ] `config/emulsify-core/storybook/main.js` written from `references/storybook/main.js` (sass-loader legacy API patch)
+- [ ] `{THEME_ROOT}/dist/` directory exists (storybook static target)
+- [ ] `src/components/ui/.gitkeep` present (preview.js require.context target)
 - [ ] `icons/.gitkeep` present
 - [ ] Storybook started, `/index.json` verified
 - [ ] Zero webpack errors
-- [ ] All 9 expected stories present
+- [ ] First component SCSS that calls `clr()` compiles without `"An importer must have…"` or `rgba(#hex)` errors
+- [ ] All 7 base stories present (Colors, Spacing, Breakpoints, TypeFaces, HeadingStyles, BodyStyles, Icons)
+- [ ] `Base/BorderRadius` story present **iff** Figma defined border-radius tokens
+- [ ] `Base/Shadows` story present **iff** Figma defined box-shadow tokens
+
+---
+
+## Notes / gotchas
+
+- **Prefer a page-level or root tokens frame node** for the 1a Variables
+  call. `get_variable_defs` returns only variables referenced from the
+  supplied `nodeId` and its descendants — a deeply nested chip URL gives
+  partial coverage even when the file is variable-rich.
+- Figma MCP read tools may return large payloads — cache responses in
+  variables; do not re-fetch.
+- A Figma file's `success` color is sometimes a typo of `error` in light
+  mode. Cross-check against dark mode and warn the user.
+- Font family names are sometimes inconsistent between Figma variables
+  and text styles. Prefer variable values when both exist.
+- Emulsify expects `utility/_container.scss` as a **separate file**, not
+  merged into `_utility.scss`.
+- `functions/_top-border.scss` is expected to exist even if no current
+  component uses it — write it from the reference.

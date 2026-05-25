@@ -1,3 +1,8 @@
+/// Converts a pixel value to rem. This function assumes that the base font size is 16px, which is the default in most browsers. It returns a CSS calc function that can be used directly in stylesheets.
+///
+/// @param {Number} $size - The pixel value to convert to rem.
+///
+/// @returns {String} A CSS calc function that converts the pixel value to rem.
 @function px2rem($size) {
   @return calc(($size / 16 * 1rem));
 }
