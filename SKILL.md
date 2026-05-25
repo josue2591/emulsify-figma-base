@@ -381,10 +381,20 @@ Read each file in `references/base/functions/` before writing its counterpart.
 
 ### `base.scss`
 
-Read `references/base/base.scss`. Preserve the exact `@use` order.
+Read `references/base/base.scss`. Preserve the exact `@use` order for
+the function partials (`functions/color`, `functions/space`).
+
+**Add `@use` lines for every token entry point** (`colors/color-variables`,
+`spacing/spacing-variables`, `typography/typography-variables`, and any
+conditional categories like `shadows/shadows-variables`). The reference
+`base.scss` *omits* these because the bcj theme loads variable entry
+points elsewhere — but for a fresh Emulsify scaffold, they belong in
+`base.scss` so the `:root { --clr-…, --s-… }` blocks reach the compiled
+Drupal CSS. Storybook is unaffected either way (the `preview-head.css`
+plain-CSS `:root` block covers it), but Drupal needs the SCSS path.
+
 When you generate the conditional categories `border-radius/` and/or
-`shadows/` (see below), add their `@use` lines next to `spacing` in
-`base.scss`.
+`shadows/` (see below), add their `@use` lines alongside the others.
 
 ### Conditional categories — border-radius and shadows
 
@@ -520,6 +530,23 @@ SCSS or JS.
 Update Twig namespace patterns to match the target theme machine name
 (replace `bcj` references with `{theme-machine-name}`).
 
+**Drop reference imports for files that don't exist in the target theme.**
+The reference imports `'./preview-head.js'` and
+`'../../../assets/fonts/sb-fonts.css'` — both are bcj-specific extras
+(GSAP / clipboard JS, a local fonts CSS). A fresh Emulsify scaffold has
+neither. Leaving the import lines in place crashes Storybook at boot
+with "module not found." Confirm each file's existence in the target;
+delete the matching import line if absent.
+
+**Strip bcj-specific `drupalSettings` polyfill keys.** The reference's
+`window.drupalSettings` polyfill includes `bcj_search` and `bcj_language`
+keys. These are bcj-Drupal-module-specific. Remove both entirely for any
+other theme — they leak the source theme's app surface and confuse
+components that introspect `drupalSettings`. Also collapse the
+`PUBLIC_ASSET_BASE` GH-Pages branch (`fourkitchens.github.io`) — it's a
+bcj deployment hook; replace with a single `/assets/` constant unless
+the target theme has its own GH-Pages deployment.
+
 Write result to `{THEME_ROOT}/config/emulsify-core/storybook/preview.js`.
 
 ### `main.js` (required — fixes a sass-loader incompatibility)
@@ -606,6 +633,8 @@ Common failure modes:
 | Dark theme not applying | Update `[data-component-theme='dark']` in `preview-head.css` to use `rgb(var(--clr-x))` with the design's darkest surface token. |
 | Webpack error: cannot find `base/...` | Check `base.scss` `@use` lines match generated category folders |
 | Twig namespace not resolving | Update `bcj` → target theme machine name in `preview.js` |
+| Storybook crashes at boot: `Module not found: Can't resolve './preview-head.js'` or `'../../../assets/fonts/sb-fonts.css'` | Reference `preview.js` imports both; they are bcj-specific. Delete the import line if the target theme has no such file. |
+| Component reads `drupalSettings.bcj_search` and gets bcj data in a non-bcj theme | The reference's `drupalSettings` polyfill leaks `bcj_search` / `bcj_language` keys. Strip both from `preview.js` for any other theme. |
 
 ---
 
@@ -616,6 +645,9 @@ Common failure modes:
 - [ ] All `_`-prefixed files are Sass partials (not entry points)
 - [ ] All entry-point files have no `_` prefix
 - [ ] `base.scss` uses `@use` for every category (not `@import`)
+- [ ] `base.scss` `@use`s every `*-variables.scss` entry point so Drupal CSS-var output is non-empty (reference omits these — add for fresh themes)
+- [ ] `preview.js` imports for files absent from target theme (`preview-head.js`, `sb-fonts.css`) deleted
+- [ ] `preview.js` `drupalSettings` polyfill stripped of `bcj_search` / `bcj_language` keys
 - [ ] `_rem-calc.scss` + `_px2rem.scss` copied verbatim
 - [ ] `preview-head.css` `:root` block is plain CSS (no Sass)
 - [ ] `preview-head.css` `--clr-*` declarations are **RGB channel triples** (`0, 95, 137`), NOT hex (`#005f89`)
